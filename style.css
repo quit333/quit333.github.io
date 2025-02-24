@@ -7,8 +7,8 @@
 		font-family: sans-serif ;
 		color: #fff;
 
-		background: black;
-		background-image: linear-gradient(to top, transparent 70%, rgb(0,0,0,0.9) 100%), url("pattern.png");
+		background: #020202;
+		background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.5) 10%, rgb(0,0,0,0.8) 100%), url("pattern.png");
 		background-size: 100%, 8px;
 		background-repeat: no-repeat, repeat;
 	}
@@ -26,11 +26,12 @@
 
 		border-style: double;
 		border-color: white;
-		background-image: linear-gradient(to top, #334d2c 0%, #848c5e 100%);
+		background-image:  url("navbar.png"), linear-gradient(to top, #334d2c 0%, #848c5e 100%);
+
 	}
 
 	nav ul {
-		margin: 5px 0px;
+		margin: 0px 0px;
 		padding: 0px;
 
 		color: black;
@@ -38,7 +39,7 @@
 	}
 
 	nav a {
-		padding: 5px 10px;
+		padding: 0px 10px;
 
 		color: black;
 		text-decoration: none;
@@ -65,6 +66,8 @@
 	}
 
 	article {
+
+		margin-right: 20px; 
 		flex: 1;
 
 		word-wrap: break-word;
