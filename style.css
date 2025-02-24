@@ -8,7 +8,7 @@
 		color: #fff;
 
 		background: #020202;
-		background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.5) 10%, rgb(0,0,0,0.8) 100%), url("pattern.png");
+		background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.5) 10%, rgb(0,0,0,0.6) 100%), url("pattern.png");
 		background-size: 100%, 8px;
 		background-repeat: no-repeat, repeat;
 	}
@@ -31,7 +31,7 @@
 	}
 
 	nav ul {
-		margin: 0px 0px;
+		margin: 3px 0px;
 		padding: 0px;
 
 		color: black;
@@ -39,7 +39,7 @@
 	}
 
 	nav a {
-		padding: 0px 10px;
+		padding: 3px 10px;
 
 		color: black;
 		text-decoration: none;
