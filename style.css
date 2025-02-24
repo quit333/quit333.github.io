@@ -1,12 +1,32 @@
-body {
+html { 
+	margin: 0;
+	height: 100%;
+
 	font-family: sans-serif ;
-	background: #fff ;
-	color: #000 ;
+	color: #fff;
+
+	background-image: linear-gradient(to top, transparent 86%, rgb(0,0,0,0.8) 100%), url("pattern.png");
+	background-size: 100%, 1vw;
+	background-repeat: no-repeat, repeat;
+}
+
+body {
+	height: 90%;
+	display: flex;
+	flex-direction: column;
 }
 
 main {
-	max-width: 800px ;
-	margin: auto ;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+article {
+  word-wrap: break-word;
+	flex: 1;
+	border: 0.5rem solid #52584c;
+	background: #000;
 }
 
 img {
@@ -17,9 +37,13 @@ header h1 {
 	text-align: center ;
 }
 
+a {
+	color: #ebb434
+}
+
 footer {
 	text-align: center ;
-	clear: both ;
+	clear: both;
 }
 
 /* For TAGLIST.HTML */
