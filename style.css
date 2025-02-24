@@ -5,9 +5,9 @@ html {
 	font-family: sans-serif ;
 	color: #fff;
 
-	background-image: linear-gradient(to top, transparent 86%, rgb(0,0,0,0.8) 100%), url("pattern.png");
+	background-image: black, linear-gradient(to top, transparent 86%, rgb(0,0,0,0.8) 100%), url("pattern.png");
 	background-size: 100%, 1vw;
-	background-repeat: no-repeat, repeat;
+	background-repeat: no-repeat, no-repeat, repeat;
 }
 
 body {
