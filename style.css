@@ -1,3 +1,6 @@
+@media (prefers-color-scheme: dark)
+{
+
 html { 
 	margin: 0;
 	height: 100%;
@@ -108,3 +111,6 @@ footer {
 #nextart,#prevart {
 	max-width: 33% ;
 }
+
+}	
+
