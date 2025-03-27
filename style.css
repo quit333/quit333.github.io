@@ -5,10 +5,10 @@
 		height: 100%;
 
 		font-family: sans-serif ;
-		color: #fff;
+		color: #fff !important;
 
-		background: #020202;
-		background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.3) 10%, rgb(0,0,0,0.6) 100%), url("pattern.png");
+		background: #020202 !important;
+		background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.3) 10%, rgb(0,0,0,0.6) 100%), url("pattern.png") !important;
 		background-size: 100%, 8px;
 		background-repeat: no-repeat, repeat;
 	}
