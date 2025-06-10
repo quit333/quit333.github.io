@@ -75,10 +75,6 @@ article{
 	margin: 20px 20px; 
 
 	word-wrap: break-word;
-
-	border: solid;
-	border-style: dotted;
-	border-color: #2e2e2e;
 }
 
 img{
@@ -93,8 +89,11 @@ a{
 	color: #ebb434
 }
 
+hr{
+	color: #404040;
+}
 footer{
-	margin: 0 20px; 
+	margin: 10px 20px; 
 
 	text-align: center ;
 	clear: both;
