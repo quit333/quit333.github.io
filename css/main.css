@@ -75,6 +75,10 @@ article{
 	margin: 20px 20px; 
 
 	word-wrap: break-word;
+
+	border: solid;
+	border-style: dotted;
+	border-color: #2e2e2e;
 }
 
 img{
