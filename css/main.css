@@ -77,8 +77,10 @@ article{
 
 	word-wrap: break-word;
 
-border-radius: 50px;
-background: #000000;
+	border-radius: 50px;
+	background: #191919;
+	box-shadow: inset 9px 9px 28px #0f0f0f,
+		    inset -9px -9px 28px #232323;
 }
 
 img{
