@@ -72,10 +72,13 @@ main{
 
 article{
 
-	margin: 0 20px; 
+	margin: 20px 20px; 
 	flex: 1;
 
 	word-wrap: break-word;
+
+border-radius: 50px;
+background: #000000;
 }
 
 img{
