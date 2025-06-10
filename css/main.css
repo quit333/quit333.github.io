@@ -90,8 +90,9 @@ a{
 }
 
 hr{
-	border: 8px solid red;
-	background-color: blue;
+	border: 1px inset #444;
+	color: 1px inset #444;
+	background-color: 1px inset red;
 }
 
 footer{
