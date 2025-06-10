@@ -65,7 +65,7 @@ main{
 	border-radius: 0 0 20px 20px;
 	border: 6px solid #52584c;
 	background: transparent;
-	backdrop-filter: blur(3px);
+	backdrop-filter: blur(2px);
 	box-shadow: inset 11px 11px 16px #060606, inset -11px -11px 16px #121311;
 }
 
