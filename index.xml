@@ -21,7 +21,6 @@
     margin-top: 20px;
     column-count: 3;
     column-gap: 10px;
-    overflow: hidden;
 }
 .tweet-container{
     break-inside: avoid;
@@ -32,6 +31,13 @@
     width: 100%;
     border-radius: 14px;
 }
+
+@media only screen and (max-width: 767px) 
+{
+
+    column-count: 2;
+}
+
 &lt;/style&gt;
 &lt;div class=&#34;twitter&#34;&gt;
 &lt;div class=&#34;tweet-container&#34;&gt;

@@ -62,6 +62,7 @@ main{
 	flex: 1;
 	display: flex;
 	flex-direction: column;
+	max-height: 100%;
 
 	border-radius: 0 0 20px 20px;
 	border: 6px solid #52584c;
@@ -78,6 +79,7 @@ article{
 	margin: 0px 40px; 
 
 	word-wrap: break-word;
+	overflow: scroll;
 }
 .home{
 	height: 100%;
