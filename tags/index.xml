@@ -1,13 +1,68 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
 	<title>— QUIT3 —</title>
-	<link>https://quit333.github.io/tags/</link>
+	<link>http://localhost:1313/tags/</link>
 	<description>Recent content in Tags on — QUIT3 —</description>
 	<generator>Hugo -- gohugo.io</generator>
 	<language>en-US</language>
     
-        <atom:link href="https://quit333.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
 	
+	
+	<item>
+		<title>Aesthetics</title>
+		<link>http://localhost:1313/aesthetics/</link>
+		<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+		
+		<guid>http://localhost:1313/aesthetics/</guid>
+		<description>&lt;style&gt;
+.twitter{
+    margin-top: 20px;
+    column-count: 3;
+    column-gap: 10px;
+    overflow: hidden;
+}
+.tweet-container{
+    break-inside: avoid;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.tweet-container img{
+    width: 100%;
+    border-radius: 14px;
+}
+&lt;/style&gt;
+&lt;div class=&#34;twitter&#34;&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/Haruwosi/status/1612417979878375425.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/N_haruyoshi/status/1647914088188755968.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/gregthesorcerer/status/1777731214964625460.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/N_haruyoshi/status/1649035362180939778.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/CHOo1NE/status/1649986083940171776.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/PM_611a/status/1651520559187128322.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/l_l__l/status/1553646430819999745.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/ARuFa_FARu/status/1876562671358685336/photo/2.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;tweet-container&#34;&gt;
+&lt;img src=&#34;https://d.fxtwitter.com/Akino_Suzume/status/1878416159651102816.jpg&#34;&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+	</item>
 	
 	</channel>
 </rss>

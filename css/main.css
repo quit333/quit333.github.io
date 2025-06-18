@@ -19,7 +19,7 @@ body{
 	flex-direction: column;
 
 	height: 95%;
-	margin: 0vw 20px; 
+	margin: 0vw 100px; 
 
 }
 header h1{
@@ -106,29 +106,24 @@ footer{
 	clear: both;
 }
 
-/* Default elements */
+/* Default Elements */
 img{
 	max-width: 100% ;
 }
-
-
 a{
 	color: #ebb434
 }
-
 hr{
 	border: 1px inset #444;
 	color: 1px inset #444;
 	background-color: 1px inset red;
 }
-/* Default theme settings */
-/* For TAGLIST.HTML */
+
+/* Default Theme Settings */
 .taglist{
 	text-align: center ;
 	clear: both ;
 }
-
-/* For NEXTPREV.HTML */
 #nextprev{
 	/* The container for both the previous and next articles. */
 }
@@ -143,3 +138,12 @@ hr{
 #nextart,#prevart{
 	max-width: 33% ;
 }
+
+/* Responsive Design */
+@media only screen and (max-width: 767px) 
+{
+	body{
+		margin: 0vw 20px; 
+	}
+}
+
