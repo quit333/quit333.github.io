@@ -1,26 +1,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
 	<title>— QUIT3 —</title>
-	<link>https://quit333.github.io/tags/</link>
+	<link>http://localhost:1313/tags/</link>
 	<description>Recent content in Tags on — QUIT3 —</description>
 	<generator>Hugo -- gohugo.io</generator>
 	<language>en-US</language>
     
-        <atom:link href="https://quit333.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
 	
 	
 	<item>
 		<title>Aesthetics</title>
-		<link>https://quit333.github.io/aesthetics/</link>
+		<link>http://localhost:1313/aesthetics/</link>
 		<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 		
-		<guid>https://quit333.github.io/aesthetics/</guid>
+		<guid>http://localhost:1313/aesthetics/</guid>
 		<description>&lt;div class=&#34;gallery&#34; id=&#34;gallery&#34;&gt;
 &lt;/div&gt;
 &lt;script&gt;
 let page = 0;
 let imageList = [];
-
 
 window.addEventListener(&#34;load&#34;, () =&gt; {
     const article = document.querySelector(&#34;article&#34;);
@@ -30,6 +29,23 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
             imageList = data;
             onFetchedImages();
     });
+
+    function fillGaps() {
+        const items = gallery.querySelectorAll(&#39;.gallery-item&#39;);
+        const gridComputedStyle = window.getComputedStyle(gallery);
+        const rowGap = parseInt(gridComputedStyle.rowGap);
+        
+        items.forEach(item =&gt; {
+            const img = item.querySelector(&#39;img&#39;);
+            if (!img.complete) return;
+            
+            const itemHeight = img.offsetHeight;
+            const gridRowHeight = rowGap; // Small grid row size
+            const rowSpan = Math.ceil(itemHeight / gridRowHeight);
+            
+            item.style.gridRowEnd = `span ${rowSpan}`;
+        });
+    }
 
     function addMoreImages(){
         const start = page * 5;
@@ -44,21 +60,19 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
             item.className = &#34;gallery-item&#34;;
             item.appendChild(img);
 
+            img.onload = () =&gt; {
+                fillGaps();
+            };
+            
             gallery.appendChild(item);
         });
         page++;
     }
 
     function onFetchedImages(){
-        if (article.scrollHeight &lt;= article.clientHeight + 100) {
-            console.log(article.scrollHeight)
-            console.log(article.clientHeight)
-
-            // Try adding more images
+        if (article.scrollHeight &lt;= article.clientHeight + 500) {
             addMoreImages();
-
-            // Wait for images to load before checking again
-            setTimeout(onFetchedImages, 100); // or use requestAnimationFrame
+            setTimeout(onFetchedImages, 100);
         }
     }
 
@@ -66,6 +80,10 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
         if (article.scrollTop &gt;= article.scrollHeight - article.clientHeight) {
             addMoreImages();
         }
+    });
+
+    window.addEventListener(&#39;resize&#39;, () =&gt; {
+        fillGaps();
     });
 });
 &lt;/script&gt;

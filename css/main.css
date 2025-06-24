@@ -1,0 +1,169 @@
+/* Containers */
+:root{
+	color-scheme: light only !important;
+}
+html{ 
+	height: 100%;
+
+	font-family: sans-serif ;
+	color: #fff !important;
+
+	background: #020202;
+	background-image: linear-gradient(to top, transparent 0%, rgb(0,0,0,0.3) 10%, rgb(0,0,0,0.7) 100%), url("/pattern.png");
+	background-size: 100%, 8px;
+	background-repeat: no-repeat, repeat;
+}
+body{
+	/* why margin-bottom isn't working */
+	height: 95%;
+	margin: 0 8vw;
+
+	display: flex;
+	flex-direction: column;
+}
+header h1{
+	flex: 0 1 auto;
+
+	text-align: center ;
+}
+nav{
+	margin: 0px 0px 10px 0px;
+
+	border-style: double;
+	border-color: white;
+	background-image:  url("/navbar.png"), linear-gradient(to top, #334d2c 0%, #848c5e 100%);
+
+	overflow: hidden;
+}
+nav a{
+	padding: 0px 4px;
+
+	display: block;
+	float: left;
+
+	color: black;
+	text-align: center;
+	text-decoration: none;
+
+	border-right: solid;
+	border-color: #2a3926;
+	background-image: linear-gradient(to top, #334d2c 0%, #848c5e 100%);
+}
+nav a.active{
+	background-image: linear-gradient(to bottom, #334d2c 0%, #848c5e 100%);
+}
+nav a:hover{
+	background-image: linear-gradient(to bottom, #334d2c 0%, #848c5e 100%);
+}
+main{
+	padding: 10px 40px;
+	flex: 1 1 auto;
+
+	display: flex;
+	flex-direction: column;
+
+	border: 6px solid #52584c;
+	border-radius: 0 0 20px 20px;
+
+	background: rgb(50, 50, 50, 0.2);
+	backdrop-filter: blur(2px);
+-webkit-backdrop-filter: blur(2px);
+	box-shadow: inset 11px 11px 16px #080909, inset -11px -11px 16px #181919;
+
+	overflow: hidden;
+
+}
+article{
+	flex: 1 1 auto;
+
+	word-wrap: break-word;
+	overflow: scroll;
+
+  	-ms-overflow-style: none;
+}
+article::-webkit-scrollbar {
+	display: none;
+}
+.home{
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+}
+.home-item{
+	flex: 1 1 auto;
+}
+.home-item h1{
+	font-size: 20px;
+	text-align: center;
+}
+.home-item p{
+	text-align: center;
+}
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+.gallery-item{
+}
+.gallery-item img {
+    width: 100%;
+    height: auto;
+}
+footer{
+	margin: 10px 0 0 0;
+	flex: 0 1 auto;
+
+	clear: both;
+	text-align: center ;
+}
+
+/* Default Elements */
+img{
+	max-width: 100% ;
+}
+a{
+	color: #ebb434
+}
+hr{
+	margin: 0;
+
+	color: 1px inset #444;
+
+	border: 1px inset #444;
+	background-color: 1px inset red;
+}
+
+/* Default Theme Settings */
+.taglist{
+	text-align: center ;
+	clear: both ;
+}
+#nextprev{
+	/* The container for both the previous and next articles. */
+}
+#prevart{
+	float: left ;
+	text-align: left ;
+}
+#nextart{
+	float: right ;
+	text-align: right ;
+}
+#nextart,#prevart{
+	max-width: 33% ;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 767px) 
+{
+	body{
+		margin: 0px 20px; 
+	}
+
+	.gallery{
+    		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
