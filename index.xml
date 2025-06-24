@@ -1,0 +1,77 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+	<title>— QUIT3 —</title>
+	<link>https://quit333.github.io/</link>
+	<description>Recent content in Home on — QUIT3 —</description>
+	<generator>Hugo -- gohugo.io</generator>
+	<language>en-US</language>
+	<lastBuildDate>Sun, 01 Jan 2023 08:00:00 -0700</lastBuildDate>
+    
+        <atom:link href="https://quit333.github.io/index.xml" rel="self" type="application/rss+xml" />
+	
+	
+	<item>
+		<title>Aesthetics</title>
+		<link>https://quit333.github.io/aesthetics/</link>
+		<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+		
+		<guid>https://quit333.github.io/aesthetics/</guid>
+		<description>&lt;div class=&#34;gallery&#34; id=&#34;gallery&#34;&gt;
+&lt;/div&gt;
+&lt;script&gt;
+let page = 0;
+let imageList = [];
+
+
+window.addEventListener(&#34;load&#34;, () =&gt; {
+    const article = document.querySelector(&#34;article&#34;);
+    const gallery = document.getElementById(&#34;gallery&#34;);
+
+    fetch(&#34;../aesthetics/links.json&#34;).then(res =&gt; res.json()).then(data =&gt; {
+            imageList = data;
+            onFetchedImages();
+    });
+
+    function addMoreImages(){
+        const start = page * 5;
+        const end = start + 5
+        const currentImages = imageList.slice(start, end);
+
+        currentImages.forEach(imgName =&gt; {
+            const img = document.createElement(&#34;img&#34;);
+            img.src = `${imgName}`;
+
+            const item = document.createElement(&#34;div&#34;);
+            item.className = &#34;gallery-item&#34;;
+            item.appendChild(img);
+
+            gallery.appendChild(item);
+        });
+        page++;
+    }
+
+    function onFetchedImages(){
+        if (article.scrollHeight &lt;= article.clientHeight) {
+            console.log(article.scrollHeight)
+            console.log(article.clientHeight)
+
+            // Try adding more images
+            addMoreImages();
+
+            // Wait for images to load before checking again
+            setTimeout(onFetchedImages, 100); // or use requestAnimationFrame
+        }
+    }
+
+    article.addEventListener(&#39;scroll&#39;, () =&gt; {
+        if (article.scrollTop &gt;= article.scrollHeight - article.clientHeight) {
+            addMoreImages();
+        }
+    });
+});
+&lt;/script&gt;
+</description>
+	</item>
+	
+	</channel>
+</rss>
