@@ -51,7 +51,7 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
     }
 
     function onFetchedImages(){
-        if (article.scrollHeight &lt;= article.clientHeight) {
+        if (article.scrollHeight &lt;= article.clientHeight + 100) {
             console.log(article.scrollHeight)
             console.log(article.clientHeight)
 
