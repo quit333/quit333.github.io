@@ -108,6 +108,7 @@ article::-webkit-scrollbar {
 .gallery-item{
 }
 .gallery-item img {
+	width: 100%;
 	border-radius: 14px;
 }
 footer{
