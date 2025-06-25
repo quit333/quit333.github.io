@@ -80,13 +80,20 @@ window.addEventListener("load", () => {
         const end = start + 5
         const currentImages = imageList.slice(start, end);
 
-        currentImages.forEach(imgName => {
+        currentImages.forEach(imgData => {
             const img = document.createElement("img");
-            img.src = `${imgName}`;
+            img.src = `${imgData.thumb}`;
+
+            const link = document.createElement("a");
+            link.href = `${imgData.full}`;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer"; 
+            link.appendChild(img);
+
 
             const item = document.createElement("div");
             item.className = "gallery-item";
-            item.appendChild(img);
+            item.appendChild(link);
 
             img.onload = () => {
                 fillGaps();

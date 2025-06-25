@@ -52,9 +52,16 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
         const end = start + 5
         const currentImages = imageList.slice(start, end);
 
-        currentImages.forEach(imgName =&gt; {
+        currentImages.forEach(imgData =&gt; {
             const img = document.createElement(&#34;img&#34;);
-            img.src = `${imgName}`;
+            img.src = `${imgData.thumb}`;
+
+            const link = document.createElement(&#34;a&#34;);
+            link.href = `${imgData.full}`;
+            link.target = &#34;_blank&#34;;
+            link.rel = &#34;noopener noreferrer&#34;; 
+            link.appendChild(img);
+
 
             const item = document.createElement(&#34;div&#34;);
             item.className = &#34;gallery-item&#34;;
