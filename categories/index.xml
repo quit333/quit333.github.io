@@ -65,7 +65,7 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
 
             const item = document.createElement(&#34;div&#34;);
             item.className = &#34;gallery-item&#34;;
-            item.appendChild(img);
+            item.appendChild(link);
 
             img.onload = () =&gt; {
                 fillGaps();
