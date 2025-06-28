@@ -51,6 +51,7 @@ nav a{
 }
 nav a.active{
 	background-image: linear-gradient(to bottom, #334d2c 0%, #848c5e 100%);
+	text-shadow: 1px 1px 2px  #334d2c;
 }
 nav a:hover{
 	background-image: linear-gradient(to bottom, #334d2c 0%, #848c5e 100%);
@@ -92,10 +93,10 @@ article::-webkit-scrollbar {
 }
 .home-item#links{
 	flex: 1 1 auto;
-display: flex;
-flex-direction: column;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .home-item#separator{
 	flex: 0 1 auto;

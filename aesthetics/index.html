@@ -9,8 +9,7 @@
 <link rel="canonical" href="http://localhost:1313/">
 <link rel='alternate' type='application/rss+xml' title="— QUIT3 — RSS" href='/index.xml'>
 <link rel="icon" href="/favicon.ico">
-<meta name="description" content="
-">
+<meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="index, follow">
 <meta charset="utf-8">
@@ -19,7 +18,7 @@
     <link rel="stylesheet" href="/css/main.css">
 
 
-      <script src="/js/main.js"></script>
+      <script src="/js/gallery.js"></script>
 
 
 
@@ -43,200 +42,6 @@
 			
 <article>
 	<div class="gallery" id="gallery"></div>
-<script>
-window.addEventListener("load", () => {
-    // Constants.
-    const article = document.querySelector("article");
-    const gallery = document.getElementById("gallery");
-
-    // Variables.
-    let page = 0;
-    let mediaList = [];
-    let gridComputedStyle = window.getComputedStyle(gallery);
-    let rowGap = parseInt(gridComputedStyle.rowGap);
-    let columnGap = parseInt(gridComputedStyle.columnGap);
-
-    // Calls onStart function after loading gallery's media index.
-    fetch("../aesthetics/media.json").then(res => res.json()).then(data => {
-        mediaList = data;
-        onStart();
-    });
-
-    // On start.
-    function onStart(){
-        if (article.scrollHeight <= article.clientHeight + 200){
-            addMoreMedia();
-            setTimeout(onStart, 100);
-        }
-    }
-
-    // Handles how different types of media are loaded.
-    function addMoreMedia(){
-        const start = page * 5;
-        const end = start + 5;
-        const currentMedia = mediaList.slice(start, end);
-
-        currentMedia.forEach(mediaItem => {
-            const mediaItemLCase = mediaItem.toLowerCase();
-            if ([".jpg", ".jpeg", ".png", ".webp"].some(ext => mediaItemLCase.endsWith(ext))){
-                const img = document.createElement("img");
-                const imgName = mediaItem;
-                const imgBaseName = `${imgName.split('.').slice(0, -1)}`;
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/thumbnails/${imgBaseName}.webp`;
-
-                const link = document.createElement("a");
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/images/${imgName}`;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer"; 
-                link.appendChild(img);
-
-                img.addEventListener("load", () => createGalleryItem(link));
-            }
-            else if (mediaItemLCase.endsWith(".gif")){
-                const img = document.createElement("img");
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-
-                const link = document.createElement("a");
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer"; 
-                link.appendChild(img);
-
-                img.addEventListener("load", () => createGalleryItem(link));
-            }
-            else if (mediaItemLCase.startsWith("http")){
-                if (mediaItemLCase.includes("youtube.com")) {
-                    const iframe = document.createElement("iframe");
-                    iframe.id = "player";
-                    iframe.type = "text/html";
-                    iframe.src = mediaItem;
-                    iframe.frameBorder = "0";
-                    iframe.allowFullscreen = true;
-                    iframe.width = "100%"; 
-
-                    createGalleryItem(iframe);
-                }
-                else {
-                    const video = document.createElement("video");
-                    video.autoplay = true;
-                    video.loop = true;
-                    video.muted = true;
-                    video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-
-                    const source = document.createElement("source");
-                    source.src = mediaItem;
-                    video.appendChild(source);
-
-                    const link = document.createElement("a");
-                    link.href = mediaItemLCase;
-                    link.target = "_blank";
-                    link.rel = "noopener noreferrer";
-                    link.appendChild(video);
-
-                    video.addEventListener("loadeddata", () => {
-                        createGalleryItem(link);
-                        observer.observe(link);
-                    });
-                }
-            }
-            else if ([".mp4", ".webm"].some(ext => mediaItemLCase.endsWith(ext))){
-                const video = document.createElement("video");
-                video.autoplay = true;
-                video.loop = true;
-                video.muted = true;
-                video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-
-                const source = document.createElement("source");
-                source.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-                video.appendChild(source);
-
-                const link = document.createElement("a");
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-                link.appendChild(video);
-
-                video.addEventListener("loadeddata", () => {
-                    createGalleryItem(link);
-                    observer.observe(link);
-                });
-            }
-            else {
-            }
-        });
-        page++;
-    }
-
-    // Creates a gallery and sets its height.
-    function createGalleryItem(media){
-        const item = document.createElement("div");
-        item.className = "gallery-item";
-        item.appendChild(media);
-        gallery.appendChild(item);
-        setItemHeight(item);
-    }
-
-    // Sets the item's height accordingly to the current gallery size.
-    function setItemHeight(item){
-        const media = item.querySelector('img, video, iframe');
-
-        // Stops the height calculation if the media hasn't loaded completely. 
-        if (!media) return;
-        if (media.tagName === "IMG" && !media.complete) return;
-        if (media.tagName === "VIDEO" && media.readyState <= 3) return;
-
-        // Calculates the height in terms of column-gap-sized row spans.
-        const itemHeight = media.clientHeight;
-        const gridRowHeight = columnGap;
-        const rowSpan = Math.round(itemHeight / gridRowHeight);
-
-        item.style.gridRowEnd = `span ${rowSpan}`;
-    }
-
-    // Pauses the videos outside the viewport. 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting){
-                playVideo(entry.target);
-            } else {
-                stopVideo(entry.target);
-            }
-        });
-    }, { 
-        root: article, threshold: 0.5 
-    });
-
-    function stopVideo(item){
-        const video = item.querySelector('video');
-        if (video) video.pause();
-    }
-    function playVideo(item) {
-        const video = item.querySelector('video');
-        if (video) video.play().catch(() => {});
-    }
-
-    // Adds more media once you scroll to the bottom.
-    article.addEventListener('scroll', () => {
-        if (article.scrollTop >= article.scrollHeight - article.clientHeight - 500){
-            addMoreMedia();
-        }
-    });
-
-    // Recalculates each item's height on windows resize.
-    window.addEventListener('resize', () => {
-        const items = gallery.querySelectorAll('.gallery-item');
-
-        // Gallery's column change responsively.
-        gridComputedStyle = window.getComputedStyle(gallery); 
-        rowGap = parseInt(gridComputedStyle.rowGap);
-        columnGap = parseInt(gridComputedStyle.columnGap);
-
-        items.forEach(item => {
-            setItemHeight(item)
-        });
-    });
-});
-</script>
 
 </article>
 
