@@ -1,20 +1,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
 	<title>— QUIT3 —</title>
-	<link>https://quit333.github.io/tags/</link>
+	<link>http://localhost:1313/tags/</link>
 	<description>Recent content in Tags on — QUIT3 —</description>
 	<generator>Hugo -- gohugo.io</generator>
 	<language>en-US</language>
     
-        <atom:link href="https://quit333.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
 	
 	
 	<item>
 		<title>Aesthetics</title>
-		<link>https://quit333.github.io/aesthetics/</link>
+		<link>http://localhost:1313/aesthetics/</link>
 		<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 		
-		<guid>https://quit333.github.io/aesthetics/</guid>
+		<guid>http://localhost:1313/aesthetics/</guid>
 		<description>&lt;div class=&#34;gallery&#34; id=&#34;gallery&#34;&gt;&lt;/div&gt;
 &lt;script&gt;
 window.addEventListener(&#34;load&#34;, () =&gt; {
@@ -28,16 +28,15 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
     let gridComputedStyle = window.getComputedStyle(gallery);
     let rowGap = parseInt(gridComputedStyle.rowGap);
     let columnGap = parseInt(gridComputedStyle.columnGap);
-   
+
     // Calls onStart function after loading gallery&#39;s media index.
     fetch(&#34;../aesthetics/media.json&#34;).then(res =&gt; res.json()).then(data =&gt; {
-            mediaList = data;
-            onStart();
+        mediaList = data;
+        onStart();
     });
 
     // On start.
     function onStart(){
-        // Adds more media until overflow enables scrolling.
         if (article.scrollHeight &lt;= article.clientHeight + 200){
             addMoreMedia();
             setTimeout(onStart, 100);
@@ -47,59 +46,95 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
     // Handles how different types of media are loaded.
     function addMoreMedia(){
         const start = page * 5;
-        const end = start + 5
+        const end = start + 5;
         const currentMedia = mediaList.slice(start, end);
 
         currentMedia.forEach(mediaItem =&gt; {
-            if ([&#34;.jpg&#34;, &#34;.jpeg&#34;, &#34;.png&#34;, &#34;.webp&#34;].some(ext =&gt; mediaItem.toLowerCase().endsWith(ext))){
+            const mediaItemLCase = mediaItem.toLowerCase();
+            if ([&#34;.jpg&#34;, &#34;.jpeg&#34;, &#34;.png&#34;, &#34;.webp&#34;].some(ext =&gt; mediaItemLCase.endsWith(ext))){
                 const img = document.createElement(&#34;img&#34;);
                 const imgName = mediaItem;
                 const imgBaseName = `${imgName.split(&#39;.&#39;).slice(0, -1)}`;
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/thumbnails/${imgBaseName}.webp`
+                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/thumbnails/${imgBaseName}.webp`;
 
                 const link = document.createElement(&#34;a&#34;);
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/images/${imgName}` 
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/images/${imgName}`;
                 link.target = &#34;_blank&#34;;
                 link.rel = &#34;noopener noreferrer&#34;; 
                 link.appendChild(img);
 
-                img.addEventListener(&#34;load&#34;, () =&gt; createGalleryItem(link)) 
+                img.addEventListener(&#34;load&#34;, () =&gt; createGalleryItem(link));
             }
-            else if (mediaItem.toLowerCase().endsWith(&#34;.gif&#34;)){
+            else if (mediaItemLCase.endsWith(&#34;.gif&#34;)){
                 const img = document.createElement(&#34;img&#34;);
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`
+                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
 
                 const link = document.createElement(&#34;a&#34;);
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}` 
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
                 link.target = &#34;_blank&#34;;
                 link.rel = &#34;noopener noreferrer&#34;; 
                 link.appendChild(img);
 
-                img.addEventListener(&#34;load&#34;, () =&gt; createGalleryItem(link)) 
+                img.addEventListener(&#34;load&#34;, () =&gt; createGalleryItem(link));
             }
-        else if ( mediaItem.toLowerCase().startsWith(&#34;http&#34;) || [&#34;mp4&#34;, &#34;webm&#34;].some(ext =&gt; mediaItem.toLowerCase().endsWith(ext))
-        ){
-            const video = document.createElement(&#34;video&#34;);
-            video.autoplay = true;
-            video.loop = true;
-            video.muted = true;
+            else if (mediaItemLCase.startsWith(&#34;http&#34;)){
+                if (mediaItemLCase.includes(&#34;youtube.com&#34;)) {
+                    const iframe = document.createElement(&#34;iframe&#34;);
+                    iframe.id = &#34;player&#34;;
+                    iframe.type = &#34;text/html&#34;;
+                    iframe.src = mediaItem;
+                    iframe.frameBorder = &#34;0&#34;;
+                    iframe.allowFullscreen = true;
+                    iframe.width = &#34;100%&#34;; 
 
-            const isDirectUrl = mediaItem.toLowerCase().startsWith(&#34;http&#34;);
-            const src = isDirectUrl
-                ? mediaItem
-                : `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                    createGalleryItem(iframe);
+                }
+                else {
+                    const video = document.createElement(&#34;video&#34;);
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
 
-            const source = document.createElement(&#34;source&#34;);
-            source.src = src;
-            video.appendChild(source);
+                    const source = document.createElement(&#34;source&#34;);
+                    source.src = mediaItem;
+                    video.appendChild(source);
 
-            const link = document.createElement(&#34;a&#34;);
-            link.href = src;
-            link.target = &#34;_blank&#34;;
-            link.rel = &#34;noopener noreferrer&#34;;
-            link.appendChild(video);
+                    const link = document.createElement(&#34;a&#34;);
+                    link.href = mediaItemLCase;
+                    link.target = &#34;_blank&#34;;
+                    link.rel = &#34;noopener noreferrer&#34;;
+                    link.appendChild(video);
 
-            video.addEventListener(&#34;loadeddata&#34;, () =&gt; createGalleryItem(link));
+                    video.addEventListener(&#34;loadeddata&#34;, () =&gt; {
+                        createGalleryItem(link);
+                        observer.observe(link);
+                    });
+                }
+            }
+            else if ([&#34;.mp4&#34;, &#34;.webm&#34;].some(ext =&gt; mediaItemLCase.endsWith(ext))){
+                const video = document.createElement(&#34;video&#34;);
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+
+                const source = document.createElement(&#34;source&#34;);
+                source.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                video.appendChild(source);
+
+                const link = document.createElement(&#34;a&#34;);
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                link.target = &#34;_blank&#34;;
+                link.rel = &#34;noopener noreferrer&#34;;
+                link.appendChild(video);
+
+                video.addEventListener(&#34;loadeddata&#34;, () =&gt; {
+                    createGalleryItem(link);
+                    observer.observe(link);
+                });
+            }
+            else {
             }
         });
         page++;
@@ -116,24 +151,46 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
 
     // Sets the item&#39;s height accordingly to the current gallery size.
     function setItemHeight(item){
-        const media = item.querySelector(&#39;img, video&#39;);
+        const media = item.querySelector(&#39;img, video, iframe&#39;);
 
         // Stops the height calculation if the media hasn&#39;t loaded completely. 
         if (!media) return;
         if (media.tagName === &#34;IMG&#34; &amp;&amp; !media.complete) return;
-        if (media.tagName === &#34;VIDEO&#34; &amp;&amp; media.readyState &lt; 3) return;
-        
+        if (media.tagName === &#34;VIDEO&#34; &amp;&amp; media.readyState &lt;= 3) return;
+
         // Calculates the height in terms of column-gap-sized row spans.
         const itemHeight = media.clientHeight;
         const gridRowHeight = columnGap;
         const rowSpan = Math.round(itemHeight / gridRowHeight);
-        
+
         item.style.gridRowEnd = `span ${rowSpan}`;
+    }
+
+    // Pauses the videos outside the viewport. 
+    const observer = new IntersectionObserver((entries) =&gt; {
+        entries.forEach((entry) =&gt; {
+            if (entry.isIntersecting){
+                playVideo(entry.target);
+            } else {
+                stopVideo(entry.target);
+            }
+        });
+    }, { 
+        root: article, threshold: 0.5 
+    });
+
+    function stopVideo(item){
+        const video = item.querySelector(&#39;video&#39;);
+        if (video) video.pause();
+    }
+    function playVideo(item) {
+        const video = item.querySelector(&#39;video&#39;);
+        if (video) video.play().catch(() =&gt; {});
     }
 
     // Adds more media once you scroll to the bottom.
     article.addEventListener(&#39;scroll&#39;, () =&gt; {
-        if (article.scrollTop &gt;= article.scrollHeight - article.clientHeight - 500) {
+        if (article.scrollTop &gt;= article.scrollHeight - article.clientHeight - 500){
             addMoreMedia();
         }
     });
@@ -148,7 +205,7 @@ window.addEventListener(&#34;load&#34;, () =&gt; {
         columnGap = parseInt(gridComputedStyle.columnGap);
 
         items.forEach(item =&gt; {
-            setItemHeight(item);
+            setItemHeight(item)
         });
     });
 });

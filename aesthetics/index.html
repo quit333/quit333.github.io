@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
-	<head>
+	<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 		<meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 
 <title>Aesthetics | — QUIT3 —</title>
 
-<link rel="canonical" href="https://quit333.github.io/">
+<link rel="canonical" href="http://localhost:1313/">
 <link rel='alternate' type='application/rss+xml' title="— QUIT3 — RSS" href='/index.xml'>
 <link rel="icon" href="/favicon.ico">
 <meta name="description" content="
@@ -16,10 +16,10 @@
 <meta charset="utf-8">
 
 
-      <link rel="stylesheet" href="/css/main.min.91586142ea003ed62d1103c07ee29c0ff2334ff3ec7e3ef55702d083f8a91594.css" integrity="sha256-kVhhQuoAPtYtEQPAfuKcD/IzT/Psfj71VwLQg/ipFZQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/main.css">
 
 
-      <script src="/js/main.f2979a93a325fecf9605263bd141398a311c8e23388ed7dcff74f92f7e632866.js" integrity="sha256-8peak6Ml/s&#43;WBSY70UE5ijEcjiM4jtfc/3T5L35jKGY=" crossorigin="anonymous"></script>
+      <script src="/js/main.js"></script>
 
 
 
@@ -55,16 +55,15 @@ window.addEventListener("load", () => {
     let gridComputedStyle = window.getComputedStyle(gallery);
     let rowGap = parseInt(gridComputedStyle.rowGap);
     let columnGap = parseInt(gridComputedStyle.columnGap);
-   
+
     // Calls onStart function after loading gallery's media index.
     fetch("../aesthetics/media.json").then(res => res.json()).then(data => {
-            mediaList = data;
-            onStart();
+        mediaList = data;
+        onStart();
     });
 
     // On start.
     function onStart(){
-        // Adds more media until overflow enables scrolling.
         if (article.scrollHeight <= article.clientHeight + 200){
             addMoreMedia();
             setTimeout(onStart, 100);
@@ -74,59 +73,95 @@ window.addEventListener("load", () => {
     // Handles how different types of media are loaded.
     function addMoreMedia(){
         const start = page * 5;
-        const end = start + 5
+        const end = start + 5;
         const currentMedia = mediaList.slice(start, end);
 
         currentMedia.forEach(mediaItem => {
-            if ([".jpg", ".jpeg", ".png", ".webp"].some(ext => mediaItem.toLowerCase().endsWith(ext))){
+            const mediaItemLCase = mediaItem.toLowerCase();
+            if ([".jpg", ".jpeg", ".png", ".webp"].some(ext => mediaItemLCase.endsWith(ext))){
                 const img = document.createElement("img");
                 const imgName = mediaItem;
                 const imgBaseName = `${imgName.split('.').slice(0, -1)}`;
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/thumbnails/${imgBaseName}.webp`
+                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/thumbnails/${imgBaseName}.webp`;
 
                 const link = document.createElement("a");
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/images/${imgName}` 
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/images/${imgName}`;
                 link.target = "_blank";
                 link.rel = "noopener noreferrer"; 
                 link.appendChild(img);
 
-                img.addEventListener("load", () => createGalleryItem(link)) 
+                img.addEventListener("load", () => createGalleryItem(link));
             }
-            else if (mediaItem.toLowerCase().endsWith(".gif")){
+            else if (mediaItemLCase.endsWith(".gif")){
                 const img = document.createElement("img");
-                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`
+                img.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
 
                 const link = document.createElement("a");
-                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}` 
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
                 link.target = "_blank";
                 link.rel = "noopener noreferrer"; 
                 link.appendChild(img);
 
-                img.addEventListener("load", () => createGalleryItem(link)) 
+                img.addEventListener("load", () => createGalleryItem(link));
             }
-        else if ( mediaItem.toLowerCase().startsWith("http") || ["mp4", "webm"].some(ext => mediaItem.toLowerCase().endsWith(ext))
-        ){
-            const video = document.createElement("video");
-            video.autoplay = true;
-            video.loop = true;
-            video.muted = true;
+            else if (mediaItemLCase.startsWith("http")){
+                if (mediaItemLCase.includes("youtube.com")) {
+                    const iframe = document.createElement("iframe");
+                    iframe.id = "player";
+                    iframe.type = "text/html";
+                    iframe.src = mediaItem;
+                    iframe.frameBorder = "0";
+                    iframe.allowFullscreen = true;
+                    iframe.width = "100%"; 
 
-            const isDirectUrl = mediaItem.toLowerCase().startsWith("http");
-            const src = isDirectUrl
-                ? mediaItem
-                : `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                    createGalleryItem(iframe);
+                }
+                else {
+                    const video = document.createElement("video");
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
 
-            const source = document.createElement("source");
-            source.src = src;
-            video.appendChild(source);
+                    const source = document.createElement("source");
+                    source.src = mediaItem;
+                    video.appendChild(source);
 
-            const link = document.createElement("a");
-            link.href = src;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            link.appendChild(video);
+                    const link = document.createElement("a");
+                    link.href = mediaItemLCase;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.appendChild(video);
 
-            video.addEventListener("loadeddata", () => createGalleryItem(link));
+                    video.addEventListener("loadeddata", () => {
+                        createGalleryItem(link);
+                        observer.observe(link);
+                    });
+                }
+            }
+            else if ([".mp4", ".webm"].some(ext => mediaItemLCase.endsWith(ext))){
+                const video = document.createElement("video");
+                video.autoplay = true;
+                video.loop = true;
+                video.muted = true;
+                video.dataset.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+
+                const source = document.createElement("source");
+                source.src = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                video.appendChild(source);
+
+                const link = document.createElement("a");
+                link.href = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/aesthetics/videos/${mediaItem}`;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.appendChild(video);
+
+                video.addEventListener("loadeddata", () => {
+                    createGalleryItem(link);
+                    observer.observe(link);
+                });
+            }
+            else {
             }
         });
         page++;
@@ -143,24 +178,46 @@ window.addEventListener("load", () => {
 
     // Sets the item's height accordingly to the current gallery size.
     function setItemHeight(item){
-        const media = item.querySelector('img, video');
+        const media = item.querySelector('img, video, iframe');
 
         // Stops the height calculation if the media hasn't loaded completely. 
         if (!media) return;
         if (media.tagName === "IMG" && !media.complete) return;
-        if (media.tagName === "VIDEO" && media.readyState < 3) return;
-        
+        if (media.tagName === "VIDEO" && media.readyState <= 3) return;
+
         // Calculates the height in terms of column-gap-sized row spans.
         const itemHeight = media.clientHeight;
         const gridRowHeight = columnGap;
         const rowSpan = Math.round(itemHeight / gridRowHeight);
-        
+
         item.style.gridRowEnd = `span ${rowSpan}`;
+    }
+
+    // Pauses the videos outside the viewport. 
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting){
+                playVideo(entry.target);
+            } else {
+                stopVideo(entry.target);
+            }
+        });
+    }, { 
+        root: article, threshold: 0.5 
+    });
+
+    function stopVideo(item){
+        const video = item.querySelector('video');
+        if (video) video.pause();
+    }
+    function playVideo(item) {
+        const video = item.querySelector('video');
+        if (video) video.play().catch(() => {});
     }
 
     // Adds more media once you scroll to the bottom.
     article.addEventListener('scroll', () => {
-        if (article.scrollTop >= article.scrollHeight - article.clientHeight - 500) {
+        if (article.scrollTop >= article.scrollHeight - article.clientHeight - 500){
             addMoreMedia();
         }
     });
@@ -175,7 +232,7 @@ window.addEventListener("load", () => {
         columnGap = parseInt(gridComputedStyle.columnGap);
 
         items.forEach(item => {
-            setItemHeight(item);
+            setItemHeight(item)
         });
     });
 });
