@@ -110,7 +110,7 @@
       if (media.tagName === "IMG" && !media.complete) return;
       if (media.tagName === "VIDEO" && media.readyState < 2) return;
       const itemHeight = media.clientHeight;
-      const gridRowHeight = columnGap;
+      const gridRowHeight = rowGap;
       const rowSpan = Math.ceil(itemHeight / gridRowHeight);
       item.style.gridRowEnd = `span ${rowSpan}`;
     }
