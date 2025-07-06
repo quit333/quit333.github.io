@@ -145,16 +145,12 @@ article::-webkit-scrollbar {
 	flex: 1 1 auto;
 }
 .resources{
-	height: 100%;
-
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	display: grid;
+	grid-template-columns: repeat(5, auto);
+	height: 100%; /* fills container */
+	gap: 10px;
 }
 .resources-item{
-	flex: 1 1 0;
-	margin: 0px 5px;
-
 	display: flex;
 	flex-direction:column;
 
@@ -165,14 +161,8 @@ article::-webkit-scrollbar {
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none; /* Standard syntax */
 }
-.resources-item:first-of-type{
-	margin: 0px 5px 0px 0px;
-}
-.resources-item:last-of-type{
-	margin: 0px 0px 0px 5px;
-}
 .resources-item p{
-	margin: 0;
+	margin: 10px 0;
 
 	color: black;
 	text-align: center;
@@ -241,6 +231,16 @@ hr{
 
 	.gallery{
     		grid-template-columns: repeat(2, 1fr);
+	}
+	.resources{
+		display: grid;
+		grid-template-columns: repeat(1, auto);
+	}
+	.resources-item{
+		overflow: inherit;
+	}
+	.resources-item img{
+		height: 250px;
 	}
 }
 
