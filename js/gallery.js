@@ -1,140 +1,127 @@
 (() => {
   // <stdin>
-  window.addEventListener("load", () => {
+  window.addEventListener("load", async () => {
     const article = document.querySelector("article");
-    const button = document.getElementById("top-button");
     const gallery = document.getElementById("gallery");
+    const button = document.getElementById("top-button");
     let page = 0;
-    let mediaList = [];
-    let rowGap = 0, columnGap = 0;
     let galleryName = "";
-    updateGaps();
-    fetch("media.json").then((res) => res.json()).then((data) => {
+    let mediaList = [];
+    const loadedSet = /* @__PURE__ */ new Set();
+    let msnry;
+    try {
+      const res = await fetch("media.json");
+      const data = await res.json();
       galleryName = data.gallery_name;
       mediaList = data.items;
-      onStart();
-    }).catch((err) => {
+      const sizer = document.createElement("div");
+      sizer.className = "grid-sizer";
+      const gutterSizer = document.createElement("div");
+      gutterSizer.className = "gutter-sizer";
+      gallery.appendChild(sizer);
+      gallery.appendChild(gutterSizer);
+      initMasonry();
+      await fillGalleryIfNeeded();
+    } catch (err) {
       console.error("Failed to load media.json:", err);
-    });
-    let isAdding = false;
-    function onStart() {
-      if (isAdding) return;
-      if (article.scrollHeight <= article.clientHeight + 200) {
-        isAdding = true;
-        addMoreMedia();
-        setTimeout(() => {
-          onStart();
-        }, 200);
+    }
+    function initMasonry() {
+      msnry = new Masonry(gallery, {
+        itemSelector: ".gallery-item",
+        columnWidth: ".grid-sizer",
+        percentPosition: true,
+        gutter: ".gutter-sizer"
+      });
+    }
+    async function fillGalleryIfNeeded() {
+      while (article.scrollHeight <= article.clientHeight + 200) {
+        await addMoreMedia();
       }
     }
-    function updateGaps() {
-      const style = window.getComputedStyle(gallery);
-      rowGap = parseInt(style.rowGap);
-      columnGap = parseInt(style.columnGap);
-    }
-    function addMoreMedia() {
+    async function addMoreMedia() {
       const batch = mediaList.slice(page * 5, (page + 1) * 5);
-      batch.forEach((mediaItem) => {
-        try {
-          loadMedia(mediaItem);
-        } catch (e) {
-          console.warn("Error loading media item:", mediaItem, e);
-        }
-      });
-      isAdding = false;
+      for (const item of batch) {
+        if (!item || !item.media || loadedSet.has(item.media)) continue;
+        loadedSet.add(item.media);
+        await loadMedia(item);
+      }
       page++;
     }
-    const loadedMediaSet = /* @__PURE__ */ new Set();
-    function loadMedia(mediaItem) {
+    async function loadMedia(item) {
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
-      if (!mediaItem || !mediaItem.source || !mediaItem.type) {
-        console.warn("Invalid media item:", mediaItem);
-        return;
-      }
-      const source = mediaItem.source.startsWith("http") ? mediaItem.source : `${base}/${mediaItem.source}`;
-      const media = mediaItem.media.startsWith("http") ? mediaItem.media : `${base}/${mediaItem.media}`;
-      if (loadedMediaSet.has(media)) return;
-      loadedMediaSet.add(media);
-      switch (mediaItem.type) {
-        case "image":
-          createIMG(source, media);
-          break;
-        case "video":
-          createVideo(source, media);
-          break;
-        case "url":
-          createLinkCard(source, media);
-          break;
-        default:
-          console.warn("Unknown media type:", mediaItem.type);
-      }
+      const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
+      const media = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
+      if (item.type === "image") return await createImageCard(src, media);
+      if (item.type === "video") return await createVideoCard(src, media);
+      if (item.type === "url") return createLinkCard(src);
+      console.warn("Unknown type:", item.type);
     }
-    function createIMG(source, media) {
+    async function createImageCard(linkURL, imageURL) {
       const img = document.createElement("img");
-      img.src = media;
+      img.src = imageURL;
       const link = document.createElement("a");
-      link.href = source;
+      link.href = linkURL;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.appendChild(img);
-      img.addEventListener("load", () => {
-        createGalleryItem(link);
-      });
-      img.addEventListener("error", () => {
-        console.warn("Image failed to load:", media);
-        link.remove();
+      return new Promise((resolve) => {
+        imagesLoaded(img, () => {
+          const item = wrapGalleryItem(link);
+          gallery.appendChild(item);
+          msnry.appended(item);
+          msnry.layout();
+          resolve();
+        });
       });
     }
-    function createVideo(source, media) {
+    async function createVideoCard(linkURL, videoURL) {
       const video = document.createElement("video");
       video.autoplay = true;
       video.loop = true;
       video.muted = true;
-      const videoSource = document.createElement("source");
-      videoSource.src = media;
-      video.appendChild(videoSource);
+      const source = document.createElement("source");
+      source.src = videoURL;
+      video.appendChild(source);
       const link = document.createElement("a");
-      link.href = source;
+      link.href = linkURL;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.appendChild(video);
-      video.addEventListener("loadeddata", () => {
-        if (!video.closest(".gallery-item")) {
-          createGalleryItem(link);
+      return new Promise((resolve) => {
+        video.addEventListener("loadeddata", () => {
+          const item = wrapGalleryItem(link);
+          gallery.appendChild(item);
+          msnry.appended(item);
+          msnry.layout();
           observer.observe(video);
-        }
-      });
-      video.addEventListener("error", () => {
-        console.warn("Video failed to load:", media);
-        link.remove();
+          resolve();
+        });
+        video.addEventListener("error", () => {
+          console.warn("Video failed to load:", videoURL);
+          resolve();
+        });
       });
     }
-    function createLinkCard(source, media) {
+    function createLinkCard(href) {
       const link = document.createElement("a");
       link.id = "link-card";
-      link.href = source;
+      link.href = href;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.style.backgroundColor = getRandomDarkColor();
-      const text = document.createElement("p");
-      text.textContent = source;
-      link.appendChild(text);
-      createGalleryItem(link);
+      const p = document.createElement("p");
+      p.textContent = href;
+      link.appendChild(p);
+      const item = wrapGalleryItem(link);
+      gallery.appendChild(item);
+      msnry.appended(item);
+      msnry.layout();
     }
-    function createGalleryItem(media) {
-      if (!media) return;
+    function wrapGalleryItem(el) {
       const item = document.createElement("div");
       item.className = "gallery-item";
-      item.appendChild(media);
-      gallery.appendChild(item);
-      setGalleryItemHeight(item);
-    }
-    function setGalleryItemHeight(item) {
-      const media = item.querySelector("img, video, iframe");
-      if (!media) return;
-      const height = media.clientHeight;
-      const rowSpan = Math.ceil(height / rowGap);
-      item.style.gridRowEnd = `span ${rowSpan}`;
+      item.appendChild(el);
+      return item;
     }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -150,12 +137,20 @@
       root: article,
       rootMargin: "250px 0px 250px 0px"
     });
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       shuffle(mediaList);
       gallery.innerHTML = "";
+      const sizer = document.createElement("div");
+      sizer.className = "grid-sizer";
+      gallery.appendChild(sizer);
+      loadedSet.clear();
+      initMasonry();
       page = 0;
-      loadedMediaSet.clear();
-      onStart();
+      await fillGalleryIfNeeded();
+    });
+    article.addEventListener("scroll", async () => {
+      const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
+      if (nearBottom) await addMoreMedia();
     });
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -169,16 +164,5 @@
       const b = Math.floor(Math.random() * 100);
       return `rgb(${r}, ${g}, ${b})`;
     }
-    article.addEventListener("scroll", () => {
-      if (isAdding) return;
-      if (article.scrollTop >= article.scrollHeight - article.clientHeight - 500) {
-        isAdding = true;
-        addMoreMedia();
-      }
-    });
-    window.addEventListener("resize", () => {
-      updateGaps();
-      document.querySelectorAll(".gallery-item").forEach(setGalleryItemHeight);
-    });
   });
 })();
