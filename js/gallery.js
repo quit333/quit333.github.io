@@ -10,6 +10,7 @@
     let galleryName = "";
     let mediaList = [];
     let msnry;
+    let activeLoads = 0;
     const counter = document.createElement("div");
     const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
@@ -72,15 +73,17 @@
     });
     async function addMoreMedia() {
       if (page >= Math.ceil(mediaList.length / batchSize)) return;
-      if (page - currentPage >= 5) return;
+      if (activeLoads >= 10) return;
       const currentPage = page;
       page++;
+      activeLoads++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
         await loadMedia(item);
       }
+      activeLoads--;
     }
     async function loadMedia(item) {
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
