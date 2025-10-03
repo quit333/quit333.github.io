@@ -20,26 +20,6 @@
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
-      counter.innerHTML = `
-		Items Loaded: ${itemCount}<br>
-		Items Appended: ${appendCount}<br>
-		Page: ${page}/${mediaList.length / 5}<br>
-		Last Item: ${lastItem}<br>
-		ScrollFill: ${article.scrollHeight}<=?${article.clientHeight + 200}<br>
-		ScrollAdd: ${article.scrollTop}>=?${article.scrollHeight - article.clientHeight - 500}<br>
-		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
-    }
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-    function getRandomDarkColor() {
-      const r = Math.floor(Math.random() * 100);
-      const g = Math.floor(Math.random() * 100);
-      const b = Math.floor(Math.random() * 100);
-      return `rgb(${r}, ${g}, ${b})`;
     }
     try {
       const res = await fetch("media.json");
@@ -123,10 +103,10 @@
       link.appendChild(p);
       const item = wrapGalleryItem(link);
       gallery.appendChild(item);
-      appendCount++;
-      updateCounter();
       msnry.appended(item);
       msnry.layout();
+      appendCount++;
+      updateCounter();
     }
     async function createImageCard(linkURL, imageURL) {
       pendingLoads.add(imageURL);
@@ -139,21 +119,20 @@
         link.rel = "noopener noreferrer";
         link.appendChild(img);
         imagesLoaded(img, () => {
-          pendingLoads.delete(imageURL);
-          updateCounter();
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
-          appendCount++;
-          updateCounter();
           msnry.appended(item);
           msnry.layout();
           resolve(item);
-        });
-        img.addEventListener("error", () => {
+          appendCount++;
           pendingLoads.delete(imageURL);
           updateCounter();
+        });
+        img.addEventListener("error", () => {
           console.warn("Image failed to load:", imageURL);
           resolve(null);
+          pendingLoads.delete(imageURL);
+          updateCounter();
         }, { once: true });
       });
     }
@@ -176,19 +155,19 @@
           updateCounter();
         };
         const onSuccess = () => {
-          appendCount++;
-          updateCounter();
-          cleanup();
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
           msnry.layout();
           resolve(item);
+          appendCount++;
+          updateCounter();
+          cleanup();
         };
         const onError = () => {
           console.warn("Video failed to load:", videoURL);
-          cleanup();
           resolve(null);
+          cleanup();
         };
         video.addEventListener("loadeddata", onSuccess, { once: true });
         video.addEventListener("error", onError, { once: true });
@@ -209,6 +188,18 @@
       root: article,
       rootMargin: "250px 0px 250px 0px"
     });
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    function getRandomDarkColor() {
+      const r = Math.floor(Math.random() * 100);
+      const g = Math.floor(Math.random() * 100);
+      const b = Math.floor(Math.random() * 100);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
   });
   console.log("Mureinoki \xB7 2025");
 })();
