@@ -12,11 +12,18 @@
     let isLoading = false;
     let endOfList = false;
     const BATCH_SIZE = 5;
+    const pendingLoads = /* @__PURE__ */ new Set();
     const counter = document.createElement("div");
     button.appendChild(counter);
     let itemCount = 0;
     function updateCounter() {
-      counter.innerHTML = `Items Loaded: ${itemCount}<br>Loading Status: ${isLoading}/${endOfList}<br>Scroll :${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}`;
+      const pendingList = Array.from(pendingLoads).slice(0, 5);
+      const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
+      counter.innerHTML = `
+		Items Loaded: ${itemCount}<br>
+		Loading Status: ${isLoading}/${endOfList}<br>
+		Scroll: ${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}<br>
+		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -120,6 +127,7 @@
       return wrapGalleryItem(link);
     }
     async function createImageCard(linkURL, imageURL) {
+      pendingLoads.add(imageURL);
       return new Promise((resolve) => {
         const img = document.createElement("img");
         img.src = imageURL;
@@ -129,16 +137,21 @@
         link.rel = "noopener noreferrer";
         link.appendChild(img);
         imagesLoaded(img, () => {
+          pendingLoads.delete(imageURL);
           const item = wrapGalleryItem(link);
           resolve(item);
+          updateCounter();
         });
         img.addEventListener("error", () => {
+          pendingLoads.delete(imageURL);
           console.warn("Image failed to load:", imageURL);
           resolve(null);
+          updateCounter();
         }, { once: true });
       });
     }
     async function createVideoCard(linkURL, videoURL) {
+      pendingLoads.add(videoURL);
       return new Promise((resolve) => {
         const video = document.createElement("video");
         video.autoplay = true;
@@ -153,12 +166,16 @@
         link.rel = "noopener noreferrer";
         link.appendChild(video);
         video.addEventListener("loadeddata", () => {
+          pendingLoads.delete(videoURL);
           const item = wrapGalleryItem(link);
           resolve(item);
+          updateCounter();
         }, { once: true });
         video.addEventListener("error", () => {
           console.warn("Video failed to load:", videoURL);
+          pendingLoads.delete(videoURL);
           resolve(null);
+          updateCounter();
         }, { once: true });
       });
     }
