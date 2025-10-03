@@ -10,6 +10,7 @@
     let galleryName = "";
     let mediaList = [];
     let msnry;
+    let earliestLoadingPage = 0;
     const counter = document.createElement("div");
     const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
@@ -72,6 +73,7 @@
     });
     async function addMoreMedia() {
       if (page >= Math.ceil(mediaList.length / batchSize)) return;
+      if (page - earliestLoadingPage >= 5) return;
       const currentPage = page;
       page++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
@@ -79,6 +81,9 @@
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
         await loadMedia(item);
+      }
+      if (currentPage === earliestLoadingPage) {
+        earliestLoadingPage++;
       }
     }
     async function loadMedia(item) {
