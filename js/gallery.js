@@ -83,19 +83,15 @@
       await fillGalleryIfNeeded();
     });
     async function addMoreMedia() {
-      if (isLoading) return;
       if (page >= Math.ceil(mediaList.length / batchSize)) return;
-      isLoading = true;
-      const batch = mediaList.slice(page * batchSize, (page + 1) * batchSize);
-      let appendedSomething = false;
+      const currentPage = page;
+      page++;
+      const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
         await loadMedia(item);
-        appendedSomething = true;
       }
-      if (appendedSomething) page++;
-      isLoading = false;
     }
     async function loadMedia(item) {
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
