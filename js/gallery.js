@@ -22,8 +22,10 @@
       counter.innerHTML = `
 		Items Loaded: ${itemCount}<br>
 		Items Appended: ${appendCount}<br>
+		Page: ${page}/${mediaList.length / 5}<br>
 		Last Item: ${lastItem}<br>
-		Scroll: ${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}<br>
+		ScrollFill: ${article.scrollHeight}<=?${article.clientHeight + 200}<br>
+		ScrollAdd: ${article.scrollTop}>=?${article.scrollHeight - article.clientHeight - 500}<br>
 		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
     function shuffle(arr) {
@@ -67,6 +69,18 @@
         await addMoreMedia();
       }
     }
+    article.addEventListener("scroll", async () => {
+      const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
+      if (nearBottom) await addMoreMedia();
+    });
+    button.addEventListener("click", async () => {
+      shuffle(mediaList);
+      gallery.innerHTML = "";
+      loadedSet.clear();
+      initMasonry();
+      page = 0;
+      await fillGalleryIfNeeded();
+    });
     async function addMoreMedia() {
       const batch = mediaList.slice(page * batchSize, (page + 1) * batchSize);
       let appendedSomething = false;
@@ -193,18 +207,6 @@
     }, {
       root: article,
       rootMargin: "250px 0px 250px 0px"
-    });
-    article.addEventListener("scroll", async () => {
-      const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
-      if (nearBottom) await addMoreMedia();
-    });
-    button.addEventListener("click", async () => {
-      shuffle(mediaList);
-      gallery.innerHTML = "";
-      loadedSet.clear();
-      initMasonry();
-      page = 0;
-      await fillGalleryIfNeeded();
     });
   });
   console.log("Mureinoki \xB7 2025");
