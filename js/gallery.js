@@ -14,6 +14,7 @@
     const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
     let appendCount = 0;
+    let lastItem = "";
     button.appendChild(counter);
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
@@ -21,6 +22,7 @@
       counter.innerHTML = `
 		Items Loaded: ${itemCount}<br>
 		Items Appended: ${appendCount}<br>
+		Last Item: ${lastItem}<br>
 		Scroll: ${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}<br>
 		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
@@ -79,6 +81,7 @@
       const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
       const media = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
       itemCount++;
+      lastItem = media;
       updateCounter();
       if (item.type === "image") return await createImageCard(src, media);
       if (item.type === "video") return await createVideoCard(src, media);
