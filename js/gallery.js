@@ -69,12 +69,14 @@
     }
     async function addMoreMedia() {
       const batch = mediaList.slice(page * batchSize, (page + 1) * batchSize);
+      let appendedSomething = false;
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
         await loadMedia(item);
+        appendedSomething = true;
       }
-      page++;
+      if (appendedSomething) page++;
     }
     async function loadMedia(item) {
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
@@ -162,7 +164,9 @@
           appendCount++;
           updateCounter();
           cleanup();
-          resolve(wrapGalleryItem(link));
+          const item = wrapGalleryItem(link);
+          gallery.appendChild(item);
+          resolve(item);
         };
         const onError = () => {
           console.warn("Video failed to load:", videoURL);
