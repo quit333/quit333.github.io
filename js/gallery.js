@@ -21,14 +21,6 @@
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
-      counter.innerHTML = `
-			Items Loaded: ${itemCount}<br>
-			Items Appended: ${appendCount}<br>
-			Page: ${page}/${mediaList.length / 5}<br>
-			Last Item: ${lastItem}<br>
-			ScrollFill: ${article.scrollHeight}<=?${article.clientHeight + 200}<br>
-			ScrollAdd: ${article.scrollTop}>=?${article.scrollHeight - article.clientHeight - 500}<br>
-			Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
     try {
       const res = await fetch("media.json");
