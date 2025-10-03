@@ -9,6 +9,9 @@
     let galleryName = "";
     let mediaList = [];
     let msnry;
+    let isLoading = false;
+    let endOfList = false;
+    const BATCH_SIZE = 5;
     const counter = document.createElement("div");
     button.appendChild(counter);
     let itemCount = 0;
@@ -57,24 +60,52 @@
       }
     }
     async function addMoreMedia() {
-      const batch = mediaList.slice(page * 5, (page + 1) * 5);
-      for (const item of batch) {
-        if (!item || !item.media || loadedSet.has(item.media)) continue;
-        loadedSet.add(item.media);
-        await loadMedia(item);
+      if (isLoading || endOfList) return;
+      isLoading = true;
+      try {
+        const start = page * BATCH_SIZE;
+        if (start >= mediaList.length) {
+          endOfList = true;
+          return;
+        }
+        const batch = mediaList.slice(start, start + BATCH_SIZE);
+        const elementPromises = batch.map(async (item) => {
+          if (!item || !item.media || loadedSet.has(item.media)) return null;
+          loadedSet.add(item.media);
+          itemCount++;
+          updateCounter();
+          const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
+          const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
+          const media2 = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
+          if (item.type === "image") return await createImageCard(src, media2);
+          if (item.type === "video") return await createVideoCard(src, media2);
+          if (item.type === "url") return createLinkCard(src);
+          console.warn("Unknown type:", item.type);
+          return null;
+        });
+        const items = (await Promise.all(elementPromises)).filter(Boolean);
+        page++;
+        if (items.length === 0) {
+          if (page * BATCH_SIZE >= media.length) endOfList = true;
+          return;
+        }
+        items.forEach((it) => gallery.appendChild(it));
+        if (msnry && typeof msnry.appended === "function") msnry.appended(items);
+        if (msnry && typeof msnry.layout === "function") msnry.layout();
+        items.forEach((it) => {
+          const vid = it.querySelector("video");
+          if (vid && observer) observer.observe(vid);
+        });
+        if (page * BATCH_SIZE >= mediaList.length) endOfList = true;
+      } finally {
+        isLoading = false;
       }
-      page++;
     }
-    async function loadMedia(item) {
-      const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
-      const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
-      const media = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
-      itemCount++;
-      updateCounter();
-      if (item.type === "image") return await createImageCard(src, media);
-      if (item.type === "video") return await createVideoCard(src, media);
-      if (item.type === "url") return createLinkCard(src);
-      console.warn("Unknown type:", item.type);
+    function wrapGalleryItem(el) {
+      const item = document.createElement("div");
+      item.className = "gallery-item";
+      item.appendChild(el);
+      return item;
     }
     function createLinkCard(href) {
       const link = document.createElement("a");
@@ -86,76 +117,68 @@
       const p = document.createElement("p");
       p.textContent = href;
       link.appendChild(p);
-      const item = wrapGalleryItem(link);
-      gallery.appendChild(item);
-      msnry.appended(item);
-      msnry.layout();
+      return wrapGalleryItem(link);
     }
     async function createImageCard(linkURL, imageURL) {
-      const img = document.createElement("img");
-      img.src = imageURL;
-      const link = document.createElement("a");
-      link.href = linkURL;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.appendChild(img);
       return new Promise((resolve) => {
+        const img = document.createElement("img");
+        img.src = imageURL;
+        const link = document.createElement("a");
+        link.href = linkURL;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.appendChild(img);
         imagesLoaded(img, () => {
           const item = wrapGalleryItem(link);
-          gallery.appendChild(item);
-          msnry.appended(item);
-          msnry.layout();
-          resolve();
+          resolve(item);
         });
+        img.addEventListener("error", () => {
+          console.warn("Image failed to load:", imageURL);
+          resolve(null);
+        }, { once: true });
       });
     }
     async function createVideoCard(linkURL, videoURL) {
-      const video = document.createElement("video");
-      video.autoplay = true;
-      video.loop = true;
-      video.muted = true;
-      const source = document.createElement("source");
-      source.src = videoURL;
-      video.appendChild(source);
-      const link = document.createElement("a");
-      link.href = linkURL;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.appendChild(video);
       return new Promise((resolve) => {
+        const video = document.createElement("video");
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        const source = document.createElement("source");
+        source.src = videoURL;
+        video.appendChild(source);
+        const link = document.createElement("a");
+        link.href = linkURL;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.appendChild(video);
         video.addEventListener("loadeddata", () => {
           const item = wrapGalleryItem(link);
-          gallery.appendChild(item);
-          msnry.appended(item);
-          msnry.layout();
-          observer.observe(video);
-          resolve();
-        });
+          resolve(item);
+        }, { once: true });
         video.addEventListener("error", () => {
           console.warn("Video failed to load:", videoURL);
-          resolve();
-        });
+          resolve(null);
+        }, { once: true });
       });
     }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const video = entry.target;
-        if (video.tagName !== "VIDEO") return;
-        if (entry.isIntersecting) {
-          video.play().catch((err) => console.warn("Video play error:", err));
-        } else {
-          video.pause();
-        }
+    let observer = null;
+    function createObserver() {
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (video.tagName !== "VIDEO") return;
+          if (entry.isIntersecting) {
+            video.play().catch((err) => console.warn("Video play error:", err));
+          } else {
+            video.pause();
+          }
+        });
+      }, {
+        root: article,
+        rootMargin: "250px 0px 250px 0px"
       });
-    }, {
-      root: article,
-      rootMargin: "250px 0px 250px 0px"
-    });
-    function wrapGalleryItem(el) {
-      const item = document.createElement("div");
-      item.className = "gallery-item";
-      item.appendChild(el);
-      return item;
     }
     article.addEventListener("scroll", async () => {
       const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
