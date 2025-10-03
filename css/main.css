@@ -87,9 +87,7 @@ main{
 	border-radius: 0 0 20px 20px;
 	box-shadow: inset 11px 11px 16px #080909, inset -11px -11px 16px #181919;
 
-	background: rgb(50, 50, 50, 0.2);
-	backdrop-filter: blur(2px);
-	-webkit-backdrop-filter: blur(2px);
+	background: rgb(10, 10, 10, 0.9);
 }
 article{
 	flex: 1 1 auto;

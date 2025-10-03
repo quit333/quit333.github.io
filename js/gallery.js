@@ -21,6 +21,14 @@
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
+      counter.innerHTML = `
+			Items Loaded: ${itemCount}<br>
+			Items Appended: ${appendCount}<br>
+			Page: ${page}/${mediaList.length / 5}<br>
+			Last Item: ${lastItem}<br>
+			ScrollFill: ${article.scrollHeight}<=?${article.clientHeight + 200}<br>
+			ScrollAdd: ${article.scrollTop}>=?${article.scrollHeight - article.clientHeight - 500}<br>
+			Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
     try {
       const res = await fetch("media.json");
@@ -51,7 +59,10 @@
         await addMoreMedia();
       }
     }
+    let scrollTimeout;
     article.addEventListener("scroll", async () => {
+      if (scrollTimeout) return;
+      scrollTimeout = setTimeout(() => scrollTimeout = null, 100);
       const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
       if (nearBottom) await addMoreMedia();
     });
@@ -70,11 +81,14 @@
       page++;
       activeLoads++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
+      const loadPromises = [];
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
-        await loadMedia(item);
+        loadPromises.push(loadMedia(item));
       }
+      await Promise.all(loadPromises);
+      msnry.layout();
       activeLoads--;
     }
     async function loadMedia(item) {
@@ -108,7 +122,6 @@
       const item = wrapGalleryItem(link);
       gallery.appendChild(item);
       msnry.appended(item);
-      msnry.layout();
       appendCount++;
       updateCounter();
     }
@@ -126,7 +139,6 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
-          msnry.layout();
           resolve(item);
           appendCount++;
           pendingLoads.delete(imageURL);
@@ -162,7 +174,7 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
-          msnry.layout();
+          observer.observe(video);
           resolve(item);
           appendCount++;
           updateCounter();
