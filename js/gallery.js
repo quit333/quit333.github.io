@@ -16,7 +16,7 @@
     button.appendChild(counter);
     let itemCount = 0;
     function updateCounter() {
-      counter.innerHTML = `Items Loaded: ${itemCount}<br>Loading Status: ${isLoading}/${endOfList}<br>Scroll Height:${article.scrollHeight}/${article.clientHeight}+200`;
+      counter.innerHTML = `Items Loaded: ${itemCount}<br>Loading Status: ${isLoading}/${endOfList}<br>Scroll :${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}`;
     }
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
