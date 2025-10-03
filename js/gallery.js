@@ -166,6 +166,8 @@
           cleanup();
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
+          msnry.appended(item);
+          msnry.layout();
           resolve(item);
         };
         const onError = () => {
