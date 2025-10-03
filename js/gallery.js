@@ -15,6 +15,7 @@
     let itemCount = 0;
     let appendCount = 0;
     let lastItem = "";
+    let isLoading = false;
     button.appendChild(counter);
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
@@ -82,6 +83,9 @@
       await fillGalleryIfNeeded();
     });
     async function addMoreMedia() {
+      if (isLoading) return;
+      if (page >= Math.ceil(mediaList.length / batchSize)) return;
+      isLoading = true;
       const batch = mediaList.slice(page * batchSize, (page + 1) * batchSize);
       let appendedSomething = false;
       for (const item of batch) {
@@ -91,6 +95,7 @@
         appendedSomething = true;
       }
       if (appendedSomething) page++;
+      isLoading = false;
     }
     async function loadMedia(item) {
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
