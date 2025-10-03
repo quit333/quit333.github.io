@@ -6,11 +6,14 @@
     const button = document.getElementById("top-button");
     const loadedSet = /* @__PURE__ */ new Set();
     const batchSize = 5;
+    const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     let page = 0;
     let galleryName = "";
     let mediaList = [];
     let msnry;
     let activeLoads = 0;
+    let layoutTimeout;
+    let scrollTimeout;
     const counter = document.createElement("div");
     const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
@@ -22,6 +25,36 @@
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
     }
+    const mediaObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const media = entry.target;
+        if (media.tagName === "IMG") {
+          if (entry.isIntersecting) {
+            if (media.dataset.originalSrc && media.src === TRANSPARENT_GIF) {
+              media.src = media.dataset.originalSrc;
+            }
+          } else {
+            if (!media.style.width && media.naturalWidth) {
+              media.style.width = media.offsetWidth + "px";
+              media.style.height = media.offsetHeight + "px";
+            }
+            if (media.src && media.src !== TRANSPARENT_GIF) {
+              media.src = TRANSPARENT_GIF;
+            }
+          }
+        }
+        if (media.tagName === "VIDEO") {
+          if (entry.isIntersecting) {
+            media.play().catch((err) => console.warn("Video play error:", err));
+          } else {
+            media.pause();
+          }
+        }
+      });
+    }, {
+      root: article,
+      rootMargin: "250px 0px 250px 0px"
+    });
     try {
       const res = await fetch("media.json");
       const data = await res.json();
@@ -51,7 +84,6 @@
         await addMoreMedia();
       }
     }
-    let scrollTimeout;
     article.addEventListener("scroll", async () => {
       if (scrollTimeout) return;
       scrollTimeout = setTimeout(() => scrollTimeout = null, 100);
@@ -66,6 +98,12 @@
       page = 0;
       await fillGalleryIfNeeded();
     });
+    function debouncedLayout() {
+      clearTimeout(layoutTimeout);
+      layoutTimeout = setTimeout(() => {
+        msnry.layout();
+      }, 100);
+    }
     async function addMoreMedia() {
       if (page >= Math.ceil(mediaList.length / batchSize)) return;
       if (activeLoads >= 10) return;
@@ -73,14 +111,13 @@
       page++;
       activeLoads++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
-      const loadPromises = [];
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
-        loadPromises.push(loadMedia(item));
+        await loadMedia(item);
+        await new Promise((resolve) => requestAnimationFrame(resolve));
       }
-      await Promise.all(loadPromises);
-      msnry.layout();
+      debouncedLayout();
       activeLoads--;
     }
     async function loadMedia(item) {
@@ -122,6 +159,7 @@
       return new Promise((resolve) => {
         const img = document.createElement("img");
         img.src = imageURL;
+        img.dataset.originalSrc = imageURL;
         const link = document.createElement("a");
         link.href = linkURL;
         link.target = "_blank";
@@ -131,6 +169,7 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
+          mediaObserver.observe(img);
           resolve(item);
           appendCount++;
           pendingLoads.delete(imageURL);
@@ -150,6 +189,7 @@
         video.autoplay = true;
         video.loop = true;
         video.muted = true;
+        video.dataset.originalSrc = videoURL;
         const source = document.createElement("source");
         source.src = videoURL;
         video.appendChild(source);
@@ -166,7 +206,7 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
-          observer.observe(video);
+          mediaObserver.observe(video);
           resolve(item);
           appendCount++;
           updateCounter();
@@ -182,20 +222,6 @@
         source.addEventListener("error", onError, { once: true });
       });
     }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const video = entry.target;
-        if (video.tagName !== "VIDEO") return;
-        if (entry.isIntersecting) {
-          video.play().catch((err) => console.warn("Video play error:", err));
-        } else {
-          video.pause();
-        }
-      });
-    }, {
-      root: article,
-      rootMargin: "250px 0px 250px 0px"
-    });
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
