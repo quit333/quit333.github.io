@@ -13,12 +13,14 @@
     const counter = document.createElement("div");
     const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
+    let appendCount = 0;
     button.appendChild(counter);
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
       counter.innerHTML = `
 		Items Loaded: ${itemCount}<br>
+		Items Appended: ${appendCount}<br>
 		Scroll: ${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}<br>
 		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
@@ -101,6 +103,8 @@
       link.appendChild(p);
       const item = wrapGalleryItem(link);
       gallery.appendChild(item);
+      appendCount++;
+      updateCounter();
       msnry.appended(item);
       msnry.layout();
     }
@@ -119,6 +123,8 @@
           updateCounter();
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
+          appendCount++;
+          updateCounter();
           msnry.appended(item);
           msnry.layout();
           resolve(item);
@@ -150,6 +156,8 @@
           updateCounter();
         };
         const onSuccess = () => {
+          appendCount++;
+          updateCounter();
           cleanup();
           resolve(wrapGalleryItem(link));
         };
