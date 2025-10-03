@@ -5,23 +5,20 @@
     const gallery = document.getElementsByClassName("gallery")[0];
     const button = document.getElementById("top-button");
     const loadedSet = /* @__PURE__ */ new Set();
+    const batchSize = 5;
     let page = 0;
     let galleryName = "";
     let mediaList = [];
     let msnry;
-    let isLoading = false;
-    let endOfList = false;
-    const BATCH_SIZE = 5;
-    const pendingLoads = /* @__PURE__ */ new Set();
     const counter = document.createElement("div");
-    button.appendChild(counter);
+    const pendingLoads = /* @__PURE__ */ new Set();
     let itemCount = 0;
+    button.appendChild(counter);
     function updateCounter() {
       const pendingList = Array.from(pendingLoads).slice(0, 5);
       const more = pendingLoads.size > 5 ? ` (+${pendingLoads.size - 5} more)` : "";
       counter.innerHTML = `
 		Items Loaded: ${itemCount}<br>
-		Loading Status: ${isLoading}/${endOfList}<br>
 		Scroll: ${article.scrollTop}/${article.scrollHeight - article.clientHeight - 500}<br>
 		Pending (${pendingLoads.size}): ${pendingList.join("<br>")}${more} `;
     }
@@ -67,46 +64,24 @@
       }
     }
     async function addMoreMedia() {
-      if (isLoading || endOfList) return;
-      isLoading = true;
-      try {
-        const start = page * BATCH_SIZE;
-        if (start >= mediaList.length) {
-          endOfList = true;
-          return;
-        }
-        const batch = mediaList.slice(start, start + BATCH_SIZE);
-        const elementPromises = batch.map(async (item) => {
-          if (!item || !item.media || loadedSet.has(item.media)) return null;
-          loadedSet.add(item.media);
-          itemCount++;
-          updateCounter();
-          const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
-          const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
-          const media2 = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
-          if (item.type === "image") return await createImageCard(src, media2);
-          if (item.type === "video") return await createVideoCard(src, media2);
-          if (item.type === "url") return createLinkCard(src);
-          console.warn("Unknown type:", item.type);
-          return null;
-        });
-        const items = (await Promise.all(elementPromises)).filter(Boolean);
-        page++;
-        if (items.length === 0) {
-          if (page * BATCH_SIZE >= media.length) endOfList = true;
-          return;
-        }
-        items.forEach((it) => gallery.appendChild(it));
-        if (msnry && typeof msnry.appended === "function") msnry.appended(items);
-        if (msnry && typeof msnry.layout === "function") msnry.layout();
-        items.forEach((it) => {
-          const vid = it.querySelector("video");
-          if (vid && observer) observer.observe(vid);
-        });
-        if (page * BATCH_SIZE >= mediaList.length) endOfList = true;
-      } finally {
-        isLoading = false;
+      const batch = mediaList.slice(page * batchSize, (page + 1) * batchSize);
+      for (const item of batch) {
+        if (!item || !item.media || loadedSet.has(item.media)) continue;
+        loadedSet.add(item.media);
+        await loadMedia(item);
       }
+      page++;
+    }
+    async function loadMedia(item) {
+      const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
+      const src = item.source.startsWith("http") ? item.source : `${base}/${item.source}`;
+      const media = item.media.startsWith("http") ? item.media : `${base}/${item.media}`;
+      itemCount++;
+      updateCounter();
+      if (item.type === "image") return await createImageCard(src, media);
+      if (item.type === "video") return await createVideoCard(src, media);
+      if (item.type === "url") return createLinkCard(src);
+      console.warn("Unknown type:", item.type);
     }
     function wrapGalleryItem(el) {
       const item = document.createElement("div");
@@ -124,7 +99,10 @@
       const p = document.createElement("p");
       p.textContent = href;
       link.appendChild(p);
-      return wrapGalleryItem(link);
+      const item = wrapGalleryItem(link);
+      gallery.appendChild(item);
+      msnry.appended(item);
+      msnry.layout();
     }
     async function createImageCard(linkURL, imageURL) {
       pendingLoads.add(imageURL);
@@ -138,20 +116,22 @@
         link.appendChild(img);
         imagesLoaded(img, () => {
           pendingLoads.delete(imageURL);
-          const item = wrapGalleryItem(link);
-          resolve(item);
           updateCounter();
+          const item = wrapGalleryItem(link);
+          gallery.appendChild(item);
+          msnry.appended(item);
+          msnry.layout();
+          resolve(item);
         });
         img.addEventListener("error", () => {
           pendingLoads.delete(imageURL);
+          updateCounter();
           console.warn("Image failed to load:", imageURL);
           resolve(null);
-          updateCounter();
         }, { once: true });
       });
     }
     async function createVideoCard(linkURL, videoURL) {
-      pendingLoads.add(videoURL);
       return new Promise((resolve) => {
         const video = document.createElement("video");
         video.autoplay = true;
@@ -165,38 +145,38 @@
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.appendChild(video);
-        video.addEventListener("loadeddata", () => {
+        const cleanup = () => {
           pendingLoads.delete(videoURL);
-          const item = wrapGalleryItem(link);
-          resolve(item);
           updateCounter();
-        }, { once: true });
-        video.addEventListener("error", () => {
+        };
+        const onSuccess = () => {
+          cleanup();
+          resolve(wrapGalleryItem(link));
+        };
+        const onError = () => {
           console.warn("Video failed to load:", videoURL);
-          pendingLoads.delete(videoURL);
+          cleanup();
           resolve(null);
-          updateCounter();
-        }, { once: true });
+        };
+        video.addEventListener("loadeddata", onSuccess, { once: true });
+        video.addEventListener("error", onError, { once: true });
+        source.addEventListener("error", onError, { once: true });
       });
     }
-    let observer = null;
-    function createObserver() {
-      if (observer) observer.disconnect();
-      observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
-          if (video.tagName !== "VIDEO") return;
-          if (entry.isIntersecting) {
-            video.play().catch((err) => console.warn("Video play error:", err));
-          } else {
-            video.pause();
-          }
-        });
-      }, {
-        root: article,
-        rootMargin: "250px 0px 250px 0px"
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (video.tagName !== "VIDEO") return;
+        if (entry.isIntersecting) {
+          video.play().catch((err) => console.warn("Video play error:", err));
+        } else {
+          video.pause();
+        }
       });
-    }
+    }, {
+      root: article,
+      rootMargin: "250px 0px 250px 0px"
+    });
     article.addEventListener("scroll", async () => {
       const nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - 500;
       if (nearBottom) await addMoreMedia();
