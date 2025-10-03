@@ -101,7 +101,6 @@
     function debouncedLayout() {
       clearTimeout(layoutTimeout);
       layoutTimeout = setTimeout(() => {
-        msnry.layout();
       }, 100);
     }
     async function addMoreMedia() {
@@ -111,13 +110,14 @@
       page++;
       activeLoads++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
+      const loadPromises = [];
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
-        await loadMedia(item);
-        await new Promise((resolve) => requestAnimationFrame(resolve));
+        loadPromises.push(loadMedia(item));
       }
-      debouncedLayout();
+      await Promise.all(loadPromises);
+      msnry.layout();
       activeLoads--;
     }
     async function loadMedia(item) {
@@ -151,6 +151,7 @@
       const item = wrapGalleryItem(link);
       gallery.appendChild(item);
       msnry.appended(item);
+      msnry.layout();
       appendCount++;
       updateCounter();
     }
@@ -169,6 +170,7 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
+          msnry.layout();
           mediaObserver.observe(img);
           resolve(item);
           appendCount++;
@@ -206,6 +208,7 @@
           const item = wrapGalleryItem(link);
           gallery.appendChild(item);
           msnry.appended(item);
+          msnry.layout();
           mediaObserver.observe(video);
           resolve(item);
           appendCount++;
