@@ -6,6 +6,7 @@
     const button = document.getElementById("top-button");
     const loadedSet = /* @__PURE__ */ new Set();
     const batchSize = 5;
+    const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     let page = 0;
     let galleryName = "";
     let mediaList = [];
@@ -27,14 +28,23 @@
     const imageObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const img = entry.target;
-        if (entry.isIntersecting && img.dataset.originalSrc && !img.complete) {
-          img.src = img.dataset.originalSrc;
+        if (entry.isIntersecting) {
+          if (img.dataset.originalSrc && img.src === TRANSPARENT_GIF) {
+            img.src = img.dataset.originalSrc;
+          }
+        } else {
+          if (!img.style.width && img.naturalWidth) {
+            img.style.width = img.offsetWidth + "px";
+            img.style.height = img.offsetHeight + "px";
+          }
+          if (img.src && img.src !== TRANSPARENT_GIF) {
+            img.src = TRANSPARENT_GIF;
+          }
         }
       });
     }, {
       root: article,
-      rootMargin: "500px 0px 500px 0px"
-      // Preload images before they're visible
+      rootMargin: "250px 0px 250px 0px"
     });
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -92,6 +102,12 @@
       page = 0;
       await fillGalleryIfNeeded();
     });
+    function debouncedLayout() {
+      clearTimeout(layoutTimeout);
+      layoutTimeout = setTimeout(() => {
+        msnry.layout();
+      }, 100);
+    }
     async function addMoreMedia() {
       if (page >= Math.ceil(mediaList.length / batchSize)) return;
       if (activeLoads >= 10) return;
@@ -99,11 +115,14 @@
       page++;
       activeLoads++;
       const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
+      const loadPromises = [];
       for (const item of batch) {
         if (!item || !item.media || loadedSet.has(item.media)) continue;
         loadedSet.add(item.media);
-        await loadMedia(item);
+        loadPromises.push(loadMedia(item));
       }
+      await Promise.all(loadPromises);
+      msnry.layout();
       activeLoads--;
     }
     async function loadMedia(item) {
@@ -145,9 +164,8 @@
       pendingLoads.add(imageURL);
       return new Promise((resolve) => {
         const img = document.createElement("img");
-        img.dataset.originalSrc = imageURL;
-        img.loading = "lazy";
         img.src = imageURL;
+        img.dataset.originalSrc = imageURL;
         const link = document.createElement("a");
         link.href = linkURL;
         link.target = "_blank";
