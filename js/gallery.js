@@ -114,9 +114,10 @@
       };
     }
     article.addEventListener("scroll", async () => {
+      const buffer = article.clientHeight * 0.6;
       let scrollTop = article.scrollTop;
-      let nearBottom = scrollTop >= article.scrollHeight - article.clientHeight - 500;
-      let nearTop = lastRowDeleteTop !== 0 && scrollTop <= lastRowDeleteTop + 500;
+      let nearBottom = scrollTop >= article.scrollHeight - article.clientHeight - buffer;
+      let nearTop = lastRowDeleteTop !== 0 && scrollTop <= lastRowDeleteTop + buffer;
       if (nearBottom && !isLoading) {
         isLoading = true;
         addItemBatch().finally(() => {
