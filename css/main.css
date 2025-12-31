@@ -146,7 +146,7 @@ article{
 	background: #111;
 
 	/* 📌 Fade-in defaults */
-	opacity: 0;
+	opacity: 1;
 }
 
 /* Fade-in animation */
@@ -155,7 +155,7 @@ article{
 }
 
 @keyframes fadeIn {
-	from { opacity: 0; }
+	from { opacity: 1; }
 	to   { opacity: 1; }
 }
 
