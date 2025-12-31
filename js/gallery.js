@@ -9,6 +9,7 @@
     const gallery = document.getElementsByClassName("gallery")[0];
     const button = document.getElementById("top-button");
     const batchSize = 5;
+    const buffer = article.clientHeight * 2;
     let gallerySession = 0;
     let page;
     let galleryName;
@@ -114,7 +115,6 @@
       };
     }
     article.addEventListener("scroll", async () => {
-      const buffer = article.clientHeight * 0.6;
       let scrollTop = article.scrollTop;
       let nearBottom = scrollTop >= article.scrollHeight - article.clientHeight - buffer;
       let nearTop = lastRowDeleteTop !== 0 && scrollTop <= lastRowDeleteTop + buffer;
