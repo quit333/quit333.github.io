@@ -87,7 +87,7 @@ main{
 	border-radius: 0 0 20px 20px;
 	box-shadow: inset 11px 11px 16px #080909, inset -11px -11px 16px #181919;
 
-	background: rgb(10, 10, 10, 0.9);
+	background: rgb(10, 10, 10, 0.8);
 }
 article{
 	flex: 1 1 auto;
@@ -100,7 +100,9 @@ article{
 	word-wrap: break-word;
 }
 
-/* Content types. */
+/*============
+  === HOME ===
+  ============*/
 .home{
 	display: flex;
 	flex-direction: column;
@@ -115,6 +117,13 @@ article{
 
 	flex: 1 1 auto;
 }
+
+.home-item#links.working{
+	background: linear-gradient(110deg,rgba(20, 20, 20, 0) 36%, rgba(31, 31, 31, .5) 50%, rgba(20, 20, 20, 0) 67%);
+	background-size: 200% 100%;   
+    animation: 1.2s shine linear infinite;
+}
+
 .home-item#separator{
 	flex: 0 1 auto;
 }
@@ -125,6 +134,11 @@ article{
 .home-item p{
 	text-align: center;
 }
+
+/*===============
+  === GALLERY ===
+  ===============*/
+
 .gallery {
 	position: relative;
 
@@ -151,12 +165,19 @@ article{
 
 /* Fade-in animation */
 .gallery-item.visible {
-	animation: fadeIn 0.45s ease forwards;
+	animation: growFromCenter 0.4s ease-out forwards;
+}
+.gallery-item.loading {
+	background: #141414;
+	background: linear-gradient(110deg,rgba(20, 20, 20, 0.12) 36%, rgba(31, 31, 31, 1) 50%, rgba(20, 20, 20, 0.12) 67%);
+	background-size: 200% 100%;   
+    animation: 0.5s shine linear infinite;
 }
 
-@keyframes fadeIn {
-	from { opacity: 0; }
-	to   { opacity: 1; }
+.gallery-item.loading.visible {
+	animation:
+		shine 0.5s linear infinite,
+		growFromCenter 0.4s ease-out forwards;
 }
 
 .gallery-item img,
@@ -185,16 +206,20 @@ article{
 	text-align: center;
 	text-decoration: none;
 }
+
+/*=================
+  === RESOURCES ===
+  =================*/
 .resources{
 	display: grid;
 	gap: 10px;
 	grid-template-columns: repeat(5, 1fr);
 
 	height: 100%;
-
-	-webkit-user-select: none; /* Safari */
-	-ms-user-select: none; /* IE 10 and IE 11 */
-	user-select: none; /* Standard syntax */
+    
+	user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 .resources-item{
 	display: flex;
@@ -243,7 +268,9 @@ article{
 	object-fit: cover;
 }
 
-/* Footer */
+/*==============
+  === FOOTER ===
+  ==============*/
 footer{
 	flex: 0 1 auto;
 	margin: 10px;
@@ -252,7 +279,9 @@ footer{
 	text-align: center ;
 }
 
-/* Default Elements */
+/*===============
+  === DEFAULT ===
+  ===============*/
 img{
 	max-width: 100% ;
 }
@@ -329,5 +358,11 @@ hr{
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
   }
 }
