@@ -2,16 +2,15 @@
   // <stdin>
   window.addEventListener("load", () => {
     const gaps = 10;
-    const article = document.querySelector("article");
-    const gallery = document.getElementsByClassName("gallery")[0];
-    const button = document.getElementById("top-button");
     const batchSize = 5;
-    const buffer = article.clientHeight * 1;
-    let gallerySession = 0;
-    let page = 0;
+    const article = document.querySelector("article");
+    const gallery = document.querySelector(".gallery");
+    const button = document.getElementById("top-button");
     let galleryName;
-    let isLoading = false;
+    let buffer = article.clientHeight;
+    let page = 0;
     let mediaList = [];
+    let isLoading = false;
     let msnry = null;
     let lastRowDeleteTop = 0;
     class SimpleMasonry {
@@ -95,14 +94,52 @@
       }
       return { load };
     })();
-    let mutex = Promise.resolve();
-    function initGallery(shuffleMedia = false) {
-      mutex = mutex.then(() => runInitGallery(shuffleMedia));
-      return mutex;
+    class Scope {
+      constructor() {
+        this.controller = new AbortController();
+        this.signal = this.controller.signal;
+        this.cleanups = /* @__PURE__ */ new Set();
+      }
+      run(fn) {
+        if (this.signal.aborted)
+          return;
+        return fn(this.signal, this.onCleanup.bind(this));
+      }
+      onCleanup(fn) {
+        this.cleanups.add(fn);
+      }
+      dispose() {
+        this.controller.abort();
+        for (const fn of this.cleanups) {
+          try {
+            fn();
+          } catch {
+          }
+        }
+        this.cleanups.clear();
+      }
     }
-    async function runInitGallery(shuffleMedia = false) {
+    let galleryScope = null;
+    async function initGallery(shuffleMedia = false) {
+      galleryScope?.dispose();
+      galleryScope = new Scope();
+      galleryScope.run((signal, onCleanup) => {
+        const onScroll = () => {
+          let nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - buffer;
+          let nearTop = lastRowDeleteTop !== 0 && article.scrollTop <= lastRowDeleteTop + buffer;
+          if (nearBottom && !isLoading) {
+            isLoading = true;
+            addItemBatch(galleryScope);
+            msnry.virtualize();
+            isLoading = false;
+          } else if (nearTop) {
+            galleryScope.run((signal2, onCleanup2) => restoreItemBatch(msnry, signal2, onCleanup2));
+          }
+        };
+        article.addEventListener("scroll", onScroll);
+        onCleanup(() => article.removeEventListener("scroll", onScroll));
+      });
       const data = await MediaRepository.load();
-      gallerySession++;
       msnry = null;
       gallery.innerHTML = "";
       page = 0;
@@ -110,35 +147,52 @@
       lastRowDeleteTop = 0;
       galleryName = data.gallery_name;
       mediaList = shuffleMedia ? shuffle(data.items) : data.items;
-      createGallery();
+      createGallery(galleryScope);
     }
-    function createGallery() {
-      msnry = new SimpleMasonry(article, gallery, calculateColumnCount(), gaps);
-      msnry.onRowVirtualized = (top) => lastRowDeleteTop = top;
-      fillGallery();
-    }
-    function fillGallery() {
-      function loop() {
-        if (article.scrollHeight <= article.clientHeight + buffer) {
-          addItemBatch();
-          requestAnimationFrame(loop);
-        }
-      }
-      loop();
-    }
-    function addItemBatch() {
-      const currentPage = page++;
-      const batch = mediaList.slice(currentPage * batchSize, (currentPage + 1) * batchSize);
-      if (batch.length === 0)
-        return;
-      batch.forEach((media) => {
-        if (!media?.preview)
-          return;
-        const jsonIndex = mediaList.indexOf(media);
-        routeItem(media, jsonIndex);
+    function createGallery(scope) {
+      scope.run((signal, onCleanup) => {
+        msnry = new SimpleMasonry(
+          article,
+          gallery,
+          window.innerWidth <= 767 ? 2 : 5,
+          gaps
+        );
+        onCleanup(() => msnry.destroy?.());
+        msnry.onRowVirtualized = (top) => lastRowDeleteTop = top;
+        fillGallery(signal, onCleanup);
       });
     }
-    function restoreItemBatch(msnry2) {
+    function fillGallery(signal, onCleanup) {
+      let rafId;
+      function loop() {
+        if (signal.aborted)
+          return;
+        if (article.scrollHeight <= article.clientHeight + buffer) {
+          addItemBatch(galleryScope);
+        }
+        rafId = requestAnimationFrame(loop);
+      }
+      rafId = requestAnimationFrame(loop);
+      onCleanup(() => cancelAnimationFrame(rafId));
+    }
+    function addItemBatch(scope) {
+      if (!scope || scope.signal.aborted)
+        return;
+      const currentPage = page++;
+      const start = currentPage * batchSize;
+      const batch = mediaList.slice(start, start + batchSize);
+      if (batch.length === 0)
+        return;
+      batch.forEach((media, i) => {
+        if (!media?.preview)
+          return;
+        const jsonIndex = start + i;
+        scope.run((signal, onCleanup) => routeItem(media, jsonIndex, null, signal, onCleanup));
+      });
+    }
+    function restoreItemBatch(msnry2, signal, onCleanup) {
+      if (signal.aborted)
+        return;
       const batch = msnry2.itemCache.splice(-batchSize, batchSize);
       batch.forEach(([jsonIndex, row, top, left, width, height]) => {
         const media = mediaList[jsonIndex];
@@ -151,15 +205,17 @@
         itemContainer.style.top = top + "px";
         itemContainer.dataset.jsonIndex = jsonIndex;
         itemContainer.dataset.row = row;
-        itemContainer.dataset.gallerySession = gallerySession;
-        routeItem(media, jsonIndex, itemContainer);
+        onCleanup(() => itemContainer.remove());
+        routeItem(media, jsonIndex, itemContainer, signal, onCleanup);
       });
     }
-    function routeItem(media, jsonIndex, itemContainer = null) {
+    function routeItem(media, jsonIndex, itemContainer = null, signal, onCleanup) {
+      if (signal.aborted)
+        return;
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
       const source = media.source.startsWith("http") ? media.source : `${base}/${media.source}?raw=true`;
       const preview = media.preview.startsWith("http") ? media.preview : `${base}/${media.preview}?raw=true`;
-      return createMediaItem(media.type, source, preview, jsonIndex, itemContainer);
+      return createMediaItem(media.type, source, preview, jsonIndex, itemContainer, signal, onCleanup);
     }
     function createMediaWrapper(source) {
       const link = document.createElement("a");
@@ -168,8 +224,10 @@
       link.rel = "noopener noreferrer";
       return link;
     }
-    function createMediaItem(type, source, preview, jsonIndex, itemContainer = null) {
+    function createMediaItem(type, source, preview, jsonIndex, itemContainer = null, signal, onCleanup) {
       return new Promise((resolve) => {
+        if (signal.aborted)
+          return;
         const wrapper = createMediaWrapper(source);
         let media;
         let videoSource;
@@ -178,9 +236,9 @@
           media.src = preview;
         } else if (type === "video") {
           media = document.createElement("video");
-          const videoSource2 = document.createElement("source");
-          videoSource2.src = preview;
-          media.appendChild(videoSource2);
+          videoSource = document.createElement("source");
+          videoSource.src = preview;
+          media.appendChild(videoSource);
           media.autoplay = media.loop = media.muted = media.playsInline = true;
         } else {
           media = document.createElement("p");
@@ -195,34 +253,32 @@
           item = document.createElement("div");
           item.className = "gallery-item";
           item.dataset.jsonIndex = jsonIndex;
-          item.dataset.gallerySession = gallerySession;
         } else {
           restore = true;
           gallery.prepend(item);
           msnry.restore(item);
         }
         item.appendChild(wrapper);
-        const handlers = resolveHandlers(resolve, item, restore);
+        onCleanup(() => item.remove());
+        const handlers = resolveHandlers(resolve, item, restore, signal);
         if (type === "image") {
           imagesLoaded(media).on("done", handlers.success).on("fail", handlers.error);
         } else if (type === "video") {
           media.addEventListener("loadeddata", handlers.success, { once: true });
           media.addEventListener("error", handlers.error, { once: true });
           if (videoSource) {
-            videoSource.src.addEventListener("error", () => handlers.error(), { once: true });
+            videoSource.addEventListener("error", () => handlers.error(), { once: true });
           }
         } else {
           handlers.success();
         }
       });
     }
-    function resolveHandlers(resolve, item, restore) {
+    function resolveHandlers(resolve, item, restore, signal) {
       return {
         success: () => {
-          if (parseInt(item.dataset.gallerySession) !== gallerySession) {
-            item.remove();
+          if (signal.aborted)
             return resolve(null);
-          }
           if (!restore) {
             gallery.appendChild(item);
             msnry.append(item);
@@ -250,21 +306,6 @@
       const b = Math.floor(Math.random() * 100);
       return `rgb(${r}, ${g}, ${b})`;
     }
-    function calculateColumnCount() {
-      return window.innerWidth <= 767 ? 2 : 5;
-    }
-    article.addEventListener("scroll", () => {
-      let nearBottom = article.scrollTop >= article.scrollHeight - article.clientHeight - buffer;
-      let nearTop = lastRowDeleteTop !== 0 && article.scrollTop <= lastRowDeleteTop + buffer;
-      if (nearBottom && !isLoading) {
-        isLoading = true;
-        addItemBatch();
-        msnry.virtualize();
-        isLoading = false;
-      } else if (nearTop) {
-        restoreItemBatch(msnry);
-      }
-    });
     button.addEventListener("click", () => initGallery(true));
     initGallery();
     console.log("Mureinoki \xB7 2025");

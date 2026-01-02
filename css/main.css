@@ -326,6 +326,9 @@ hr{
 	body{
 		margin: 0px 20px; 
 	}
+	article{
+		margin: 0 20px;
+	}
 	.gutter-sizer { 
 		width: 10px; 
 	}
