@@ -37,7 +37,6 @@
         item.style.top = `${this.rowPositions[this.columnIndex]}px`;
         item.dataset.row = this.rowIndex;
         item.dataset.column = this.columnIndex;
-        item.title = `column: ${this.columnIndex} | row: ${this.rowIndex}`;
         this.rowPositions[this.columnIndex] += item.offsetHeight + this.gaps;
         if (this.rowPositions[this.columnIndex] > this.rowMax) {
           this.columnIndex++;
@@ -184,7 +183,7 @@
       if (batch.length === 0)
         return;
       batch.forEach((media, i) => {
-        if (!media?.preview)
+        if (!media)
           return;
         const jsonIndex = start + i;
         scope.run((signal, onCleanup) => routeItem(media, jsonIndex, null, signal, onCleanup));
@@ -213,31 +212,32 @@
       if (signal.aborted)
         return;
       const base = `https://raw.githubusercontent.com/quit333/quit3-backup/refs/heads/master/${galleryName}`;
-      const source = media.source.startsWith("http") ? media.source : `${base}/${media.source}?raw=true`;
-      const preview = media.preview.startsWith("http") ? media.preview : `${base}/${media.preview}?raw=true`;
-      return createMediaItem(media.type, source, preview, jsonIndex, itemContainer, signal, onCleanup);
+      const fullres = media.fullres ? media.fullres.startsWith("http") ? media.fullres : `${base}/${media.fullres}?raw=true` : null;
+      const thumbnail = media.thumbnail ? media.thumbnail.startsWith("http") ? media.thumbnail : `${base}/${media.thumbnail}?raw=true` : null;
+      const source = media.source || null;
+      return createMediaItem(media.type, fullres, thumbnail, source, jsonIndex, itemContainer, signal, onCleanup);
     }
-    function createMediaWrapper(source) {
+    function createMediaWrapper(url) {
       const link = document.createElement("a");
-      link.href = source;
+      link.href = url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       return link;
     }
-    function createMediaItem(type, source, preview, jsonIndex, itemContainer = null, signal, onCleanup) {
+    function createMediaItem(type, fullres, thumbnail, source, jsonIndex, itemContainer = null, signal, onCleanup) {
       return new Promise((resolve) => {
         if (signal.aborted)
           return;
-        const wrapper = createMediaWrapper(source);
+        const wrapper = createMediaWrapper(fullres);
         let media;
         let videoSource;
         if (type === "image") {
           media = document.createElement("img");
-          media.src = preview;
+          media.src = thumbnail || fullres;
         } else if (type === "video") {
           media = document.createElement("video");
           videoSource = document.createElement("source");
-          videoSource.src = preview;
+          videoSource.src = thumbnail || fullres;
           media.appendChild(videoSource);
           media.autoplay = media.loop = media.muted = media.playsInline = true;
         } else {
@@ -259,6 +259,14 @@
           msnry.restore(item);
         }
         item.appendChild(wrapper);
+        if (source && type !== "url") {
+          const sourceWrapper = createMediaWrapper(source);
+          const sourceContainer = document.createElement("div");
+          sourceContainer.className = "gallery-source";
+          sourceContainer.textContent = "\u{1F517}\uFE0F";
+          sourceWrapper.appendChild(sourceContainer);
+          item.appendChild(sourceWrapper);
+        }
         onCleanup(() => item.remove());
         const handlers = resolveHandlers(resolve, item, restore, signal);
         if (type === "image") {

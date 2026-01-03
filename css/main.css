@@ -162,6 +162,22 @@ article{
 	/* 📌 Fade-in defaults */
 	opacity: 0;
 }
+.gallery-source {
+	opacity: 0;
+	width: 30px;
+	height: 30px;
+	background: #292929;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	border-radius: 8px;
+	text-align: center;
+	transition: opacity 0.2s ease-in-out;
+}
+.gallery-item:hover .gallery-source{
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+}
 
 /* Fade-in animation */
 .gallery-item.visible {
@@ -334,6 +350,7 @@ hr{
 	}
 	.gallery-item {
 		width: calc(50% - 5px);
+		position: relative;
 	}
 	.resources{
 		grid-template-columns: repeat(1, auto);
