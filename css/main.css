@@ -163,7 +163,7 @@ article{
 	opacity: 0;
 }
 .gallery-source {
-	opacity: 0;
+	opacity: 1;
 	width: 30px;
 	height: 30px;
 	background: #292929;
@@ -172,12 +172,15 @@ article{
 	top: 0px;
 	right: 0px;
 	border-radius: 8px;
-	text-align: center;
 	transition: opacity 0.2s ease-in-out;
 	display: flex;
+	
 }
 .gallery-source span{
+	margin: 0px auto auto auto;
+	text-align: center;
 	flex: auto;
+
 }
 .gallery-item:hover .gallery-source{
 	opacity: 1;
