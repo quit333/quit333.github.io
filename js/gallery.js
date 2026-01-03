@@ -262,8 +262,10 @@
         if (source && type !== "url") {
           const sourceWrapper = createMediaWrapper(source);
           const sourceContainer = document.createElement("div");
+          const sourceEmoji = document.createElement("span");
           sourceContainer.className = "gallery-source";
-          sourceContainer.textContent = "\u{1F517}\uFE0F";
+          sourceEmoji.textContent = "\u{1F517}\uFE0F";
+          sourceContainer.appendChild(sourceEmoji);
           sourceWrapper.appendChild(sourceContainer);
           item.appendChild(sourceWrapper);
         }
