@@ -163,7 +163,7 @@ article{
 	opacity: 0;
 }
 .gallery-source {
-	opacity: 1;
+	opacity: 0;
 	width: 30px;
 	height: 30px;
 	background: #292929;
