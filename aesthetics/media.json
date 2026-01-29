@@ -5928,11 +5928,6 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/NX0HMM-H23Q/hqdefault.jpg",
-      "source": "https://www.youtube.com/embed/NX0HMM-H23Q"
-    },
-    {
-      "type": "image",
       "thumbnail": "thumbnails/0943.webp",
       "fullres": "images/0943.jpeg"
     },
