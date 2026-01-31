@@ -1,0 +1,556 @@
+{
+    "gallery_name": "resources/learning",
+    "library_tags": [
+        "glossaries",
+        "demonstrations",
+        "anime",
+        "rendering",
+        "anatomy",
+        "perspective",
+        "3d",
+        "tutorials",
+        "guides",
+        "sfx",
+        "drawing",
+        "clothes"
+    ],
+    "items": [
+        {
+            "type": "image",
+            "tags": [
+                "glossaries"
+            ],
+            "thumbnail": "thumbnails/glossaries/01.webp",
+            "fullres": "images/glossaries/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "glossaries"
+            ],
+            "thumbnail": "thumbnails/glossaries/02.webp",
+            "fullres": "images/glossaries/02.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "glossaries"
+            ],
+            "thumbnail": "thumbnails/glossaries/03.webp",
+            "fullres": "images/glossaries/03.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anime/01.webp",
+            "fullres": "images/demonstrations/anime/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anime/02.webp",
+            "fullres": "images/demonstrations/anime/02.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/demonstrations/rendering/01.webp",
+            "fullres": "images/demonstrations/rendering/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/demonstrations/rendering/02.webp",
+            "fullres": "images/demonstrations/rendering/02.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/04.webp",
+            "fullres": "images/demonstrations/anatomy/04.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "",
+            "fullres": "images/demonstrations/anatomy/08.gif",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/09.webp",
+            "fullres": "images/demonstrations/anatomy/09.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/01.webp",
+            "fullres": "images/demonstrations/anatomy/01.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/05.webp",
+            "fullres": "images/demonstrations/anatomy/05.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/03.webp",
+            "fullres": "images/demonstrations/anatomy/03.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/06.webp",
+            "fullres": "images/demonstrations/anatomy/06.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/02.webp",
+            "fullres": "images/demonstrations/anatomy/02.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/demonstrations/anatomy/07.webp",
+            "fullres": "images/demonstrations/anatomy/07.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "demonstrations",
+                "perspective"
+            ],
+            "thumbnail": "thumbnails/demonstrations/perspective/01.webp",
+            "fullres": "images/demonstrations/perspective/01.png",
+            "source": ""
+        },
+        {
+            "type": "video",
+            "tags": [
+                "demonstrations",
+                "3d"
+            ],
+            "thumbnail": "",
+            "fullres": "images/demonstrations/3d/01.mp4",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "tutorials",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/tutorials/anime/01.webp",
+            "fullres": "images/tutorials/anime/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "tutorials",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/tutorials/rendering/01.webp",
+            "fullres": "images/tutorials/rendering/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/guides/anime/01.webp",
+            "fullres": "images/guides/anime/01.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/guides/anime/02.webp",
+            "fullres": "images/guides/anime/02.jpg",
+            "source": ""
+        },
+        {
+            "type": "video",
+            "tags": [
+                "guides",
+                "anime"
+            ],
+            "thumbnail": "thumbnails/guides/anime/03.webp",
+            "fullres": "images/guides/anime/03.jpeg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/13.webp",
+            "fullres": "images/guides/rendering/13.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/12.webp",
+            "fullres": "images/guides/rendering/12.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/11.webp",
+            "fullres": "images/guides/rendering/11.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/08.webp",
+            "fullres": "images/guides/rendering/08.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/10.webp",
+            "fullres": "images/guides/rendering/10.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/04.webp",
+            "fullres": "images/guides/rendering/04.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/06.webp",
+            "fullres": "images/guides/rendering/06.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/09.webp",
+            "fullres": "images/guides/rendering/09.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/01.webp",
+            "fullres": "images/guides/rendering/01.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/05.webp",
+            "fullres": "images/guides/rendering/05.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/03.webp",
+            "fullres": "images/guides/rendering/03.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/02.webp",
+            "fullres": "images/guides/rendering/02.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "rendering"
+            ],
+            "thumbnail": "thumbnails/guides/rendering/07.webp",
+            "fullres": "images/guides/rendering/07.jpg",
+            "source": ""
+        },
+        {
+            "type": "video",
+            "tags": [
+                "guides",
+                "sfx"
+            ],
+            "thumbnail": "thumbnails/guides/sfx/01.webp",
+            "fullres": "images/guides/sfx/01.jpeg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "drawing"
+            ],
+            "thumbnail": "thumbnails/guides/drawing/01.webp",
+            "fullres": "images/guides/drawing/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/11.webp",
+            "fullres": "images/guides/anatomy/11.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/10.webp",
+            "fullres": "images/guides/anatomy/10.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/08.webp",
+            "fullres": "images/guides/anatomy/08.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/04.webp",
+            "fullres": "images/guides/anatomy/04.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/06.webp",
+            "fullres": "images/guides/anatomy/06.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/09.webp",
+            "fullres": "images/guides/anatomy/09.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/01.webp",
+            "fullres": "images/guides/anatomy/01.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/02.webp",
+            "fullres": "images/guides/anatomy/02.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/05.webp",
+            "fullres": "images/guides/anatomy/05.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/03.webp",
+            "fullres": "images/guides/anatomy/03.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anatomy"
+            ],
+            "thumbnail": "thumbnails/guides/anatomy/07.webp",
+            "fullres": "images/guides/anatomy/07.jpg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "perspective"
+            ],
+            "thumbnail": "thumbnails/guides/perspective/01.webp",
+            "fullres": "images/guides/perspective/01.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "perspective"
+            ],
+            "thumbnail": "thumbnails/guides/perspective/02.webp",
+            "fullres": "images/guides/perspective/02.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "perspective"
+            ],
+            "thumbnail": "thumbnails/guides/perspective/03.webp",
+            "fullres": "images/guides/perspective/03.jpg",
+            "source": ""
+        },
+        {
+            "type": "video",
+            "tags": [
+                "guides",
+                "clothes"
+            ],
+            "thumbnail": "thumbnails/guides/clothes/02.webp",
+            "fullres": "images/guides/clothes/02.jpeg",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "clothes"
+            ],
+            "thumbnail": "thumbnails/guides/clothes/01.webp",
+            "fullres": "images/guides/clothes/01.jpg",
+            "source": ""
+        }
+    ]
+}

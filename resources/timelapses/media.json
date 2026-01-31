@@ -1,0 +1,19 @@
+{
+    "gallery_name": "resources/timelapses",
+    "library_tags": [
+        "digital",
+        "anime"
+    ],
+    "items": [
+        {
+            "type": "video",
+            "tags": [
+                "digital",
+                "anime"
+            ],
+            "thumbnail": "",
+            "fullres": "images/digital/anime/01.mp4",
+            "source": ""
+        }
+    ]
+}
