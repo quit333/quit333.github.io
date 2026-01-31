@@ -524,7 +524,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/Szpxpj5Sv9I/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/Szpxpj5Sv9I/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/Szpxpj5Sv9I"
     },
     {
@@ -909,7 +909,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/R3tV9JIJ6G4/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/R3tV9JIJ6G4/mqdefault.jpg",
       "source": "https://www.youtube.com/embed/R3tV9JIJ6G4"
     },
     {
@@ -1225,7 +1225,8 @@
     {
       "type": "image",
       "thumbnail": "thumbnails/0234.webp",
-      "fullres": "images/0234.jpg"
+      "fullres": "images/0234.jpg",
+      "source": "https://trace.moe/?url=https%3A%2F%2Fraw.githubusercontent.com%2Fquit333%2Fquit3-backup%2Frefs%2Fheads%2Fmaster%2Faesthetics%2Fimages%2F0234.jpg"
     },
     {
       "type": "image",
@@ -1489,7 +1490,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/SY4TbnNxF9M/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/SY4TbnNxF9M/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/SY4TbnNxF9M"
     },
     {
@@ -2259,7 +2260,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/1RzNDZFQllA/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/1RzNDZFQllA/mqdefault.jpg",
       "source": "https://www.youtube.com/embed/1RzNDZFQllA"
     },
     {
@@ -2564,7 +2565,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/LpkWrc3yMEU/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/LpkWrc3yMEU/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/LpkWrc3yMEU"
     },
     {
@@ -2644,7 +2645,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/OwPJyEdmPEY/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/OwPJyEdmPEY/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/OwPJyEdmPEY"
     },
     {
@@ -2904,7 +2905,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/w13vejFKsFs/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/w13vejFKsFs/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/w13vejFKsFs"
     },
     {
@@ -3169,7 +3170,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/a5qMBW3nIak/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/a5qMBW3nIak/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/a5qMBW3nIak"
     },
     {
@@ -3499,7 +3500,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/GoaBXTOM6DQ/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/GoaBXTOM6DQ/mqdefault.jpg",
       "source": "https://www.youtube.com/embed/GoaBXTOM6DQ"
     },
     {
@@ -4004,7 +4005,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/8jjT4AjTUMA/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/8jjT4AjTUMA/mqdefault.jpg",
       "source": "https://www.youtube.com/embed/8jjT4AjTUMA"
     },
     {
@@ -4894,7 +4895,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/SHf6LwxJ22E/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/SHf6LwxJ22E/maxresdefault.jpg",
       "source": "https://www.youtube.com/embed/SHf6LwxJ22E"
     },
     {
@@ -4954,7 +4955,7 @@
     },
     {
       "type": "image",
-      "fullres": "https://img.youtube.com/vi/MQi3nUfPTVE/hqdefault.jpg",
+      "fullres": "https://i3.ytimg.com/vi/MQi3nUfPTVE/mqdefault.jpg",
       "source": "https://www.youtube.com/embed/MQi3nUfPTVE"
     },
     {
