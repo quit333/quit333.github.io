@@ -1,5 +1,5 @@
 {
-    "gallery_name": "resources/learning",
+    "gallery_name": "learning",
     "library_tags": [
         "glossaries",
         "demonstrations",
@@ -218,6 +218,16 @@
                 "guides",
                 "anime"
             ],
+            "thumbnail": "thumbnails/guides/anime/03.webp",
+            "fullres": "images/guides/anime/03.png",
+            "source": ""
+        },
+        {
+            "type": "image",
+            "tags": [
+                "guides",
+                "anime"
+            ],
             "thumbnail": "thumbnails/guides/anime/01.webp",
             "fullres": "images/guides/anime/01.jpg",
             "source": ""
@@ -230,16 +240,6 @@
             ],
             "thumbnail": "thumbnails/guides/anime/02.webp",
             "fullres": "images/guides/anime/02.jpg",
-            "source": ""
-        },
-        {
-            "type": "video",
-            "tags": [
-                "guides",
-                "anime"
-            ],
-            "thumbnail": "thumbnails/guides/anime/03.webp",
-            "fullres": "images/guides/anime/03.jpg",
             "source": ""
         },
         {
@@ -373,13 +373,13 @@
             "source": ""
         },
         {
-            "type": "video",
+            "type": "image",
             "tags": [
                 "guides",
                 "sfx"
             ],
             "thumbnail": "thumbnails/guides/sfx/01.webp",
-            "fullres": "images/guides/sfx/01.jpg",
+            "fullres": "images/guides/sfx/01.png",
             "source": ""
         },
         {
@@ -533,13 +533,13 @@
             "source": ""
         },
         {
-            "type": "video",
+            "type": "image",
             "tags": [
                 "guides",
                 "clothes"
             ],
-            "thumbnail": "thumbnails/guides/clothes/02.webp",
-            "fullres": "images/guides/clothes/02.jpg",
+            "thumbnail": "thumbnails/guides/clothes/01.webp",
+            "fullres": "images/guides/clothes/01.jpg",
             "source": ""
         },
         {
@@ -548,8 +548,8 @@
                 "guides",
                 "clothes"
             ],
-            "thumbnail": "thumbnails/guides/clothes/01.webp",
-            "fullres": "images/guides/clothes/01.jpg",
+            "thumbnail": "thumbnails/guides/clothes/02.webp",
+            "fullres": "images/guides/clothes/02.png",
             "source": ""
         }
     ]
